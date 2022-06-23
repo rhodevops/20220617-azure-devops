@@ -8,5 +8,5 @@
 workspace/lab*/*
 # But not these files...
 !.gitkeep
-!workspace/lab07001/*
+
 
