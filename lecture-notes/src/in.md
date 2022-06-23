@@ -5,9 +5,189 @@ author: Roberto Negro
 date: 17/06/2022
 ---
 
-# Secciones anteriores
+# Introducción
+
+## Definiciones y algunas instalaciones
+
+- VSCode
+- Concepto de Devops
+
+## ¿Qué es Azure Devops?
+
+AZ Devops es una plataforma que centraliza todo lo que necesita el ciclo de vida de una aplicación. Varios módulos:
+
+- Azure Repos $\to$ CVS (Git)
+- Azure Pipelines $\to$ CI y CD, despliegues automáticos
+- Azure Boards $\to$ gestión del proyecto
+- Azure Test Plans $\to$ herramientas de pruebas
+- Azure Artifacts $\to$ gestor de paquetes
+
+# Configuración de la organización en AZ Devops
+
+Se navega a `Organization Settings` (abajo, izquierda)
+
+## Configuraciones generales
+
+General tab:
+
+- `Overview` generales
+- `Projects` proyectos
+- `Users` usuarios de organización/proyecto
+- `Billing` facturación (extensiones de pago)
+- `Auditing` trazas de las acciones de auditoria realizadas
+- `Global Notifications` gestionar notificaciones globales
+- `Usage` usos/límites
+- `Extensions` extensiones
+- `AZ AD` Azure Active Directory (usuarios/roles)
+- `Usage`
+
+## Configuración de la Seguridad
+
+Security tab:
+
+- `Policies` (OAuth, SSH)
+- `Permissions` (de grupo, de usuario): distintos roles
+
+## Configuración de procesos
+
+Boards tab:
+
+- `Process` Procesos de gestión de proyectos
+
+Tipos: Basic, Agile, Scrum, CMMI
+
+## Configuración de pipelines
+
+Pipelines tab:
+
+- `Agent Pools` MS-hosted o self-hosted (lm, AZ vm)
+- `Settings` des(habilitar) límites
+- `Deployment pools` grupos de despliegues a sitios concretos
+- `Parallel jobs` hacer builds/jobs/acciones en paralelo (no hay cola de jobs)
+- `OAuth configurations` configurar accesos OAuth
+
+## Configuración de repos
+
+Repos tab:
+
+- `Repositories` configuraciones
+
+## Configuración de artifacts
+
+Artifacts tab:
+
+- `Storage` Capacidad de almacenaje disponible
+
+# Configuración de un proyecto en Azure Devops
+
+Dentro del proyecto, se navega a `Organization Settings` (abajo, izquierda)
+
+## Proyecto en AZ Devops
+
+Los proyectos dentro de una empresa/departamento.
+
+## Configuracion general del proyecto
+
+General tab:
+
+- `Overview`
+- `Teams`
+- `Permissions`
+- `Notifications` pull request, etc
+- `Service hooks` conectores, reaccionar a eventos
+- `Dashboards`
+
+## Configuracion boards del proyecto
+
+Boards tab:
+
+- `Project configuration` configurar sprints
+- `Team configuration` 
+- `GitHub connections` traer información del GitHub
+
+## Configuracion de las pipelines del proyecto
+
+Pipelines tab:
+
+- `Agent Pools` MS-hosted o self-hosted (lm, AZ vm)
+- `Parallel jobs` hacer builds/jobs/acciones en paralelo (no hay cola de jobs)
+- `Settings` des(habilitar) límites
+- `Test Management` configurar Flaky test (pruebas)
+- `Release retention` días de retención de la release
+- `Service connections` conectar cuentas de AZ, GitHub, etc (integración)
+- `XAML build services` crear nuevos servicios de AZ de forma manual
+
+
+## Configuracion de los repos del proyecto
+
+Repos tab:
+
+- `Repositories` repositories, settings, policies, security
+
+## Configuracion de los artifacts del proyecto
+
+Artifacts tab:
+
+- `Storage`
+
+## Configuracion de los tests del proyecto
+
+Test tab:
+
+- `Retention` días que se mantienen los resultados de los test
+
+# Metodología Agile
+
+## ¿Qúe se hacía antes? Waterfall
+
+La metodología en cascada o Waterfall:
+
+- Dividido en distintas fases (p.e. construcción de un coche)
+- Rígido
+- Enfoque secuencial (cada fase una sola vez)
+- Requisitos la inicio del proyecto
+- Completar el proyecto
+
+## ¿Qué se hace ahora? Agile
+
+- Ciclo de vida en sprints
+- Flexible
+- Enfoque iterativo (vuelta a la misma fase)
+- Los requisitos cambian y evolucionan
+- Cumplir las exigencias del cliente
+
+Buscar más información.
+
+# Módulo Overview
+
+## Summary
+
+Resumen del proyecto.
+
+## Dashboards
+
+- Paneles que se pueden configurar.
+- Hay distintos widgets que se pueden agregar.
+- Hay una Extensión Gallery (un marketplace)
+
+## Wiki
+
+Escribir la documentación general del proyecto.
+
+- `Create project wiki`
+- `Publish code as wiki` copiar de los README.md de los propios repositorios
+
+# Módulo Boards
 
 [TODO]
+
+# Modulo Repos
+
+
+
+
+
+
 
 # Módulo pipelines CI
 
@@ -38,8 +218,8 @@ Un agente es una máquina/contenedor/programa que actúa para un usuario u otro 
 
 Tipos de agentes:
 
-- Agentes hospedados por Microsoft
-- Agentes autohospedados
+- Microsoft-hosted agents
+- Self hosted agents (local machine, azure machine, etc)
 
 Consultar [docs.microsoft.com/es-es/azure/devops/pipelines](https://docs.microsoft.com/es-es/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml) para ver lo que contiene cada uno de los Microsoft-hosted agents. 
 
@@ -88,3 +268,25 @@ Dentro del proyecto de Azure Devops, en `Project Settings` se navega a `Pipeline
 - Los pool `Default` y `Azure Pipelines` vienen ya creados.
 - El pool `Azure Pipelines` contiene los agentes proporcionados por Microsoft. 
 - El pool `Default` contiene los agentes creados por nosotros.
+
+## Crear una pipeline utilizando una plantilla
+
+En AZ Devops, se navega Pipelines/Pipelines y se hace clic en `Create Pipelin`. En este caso, se indica que el código está en un `Azure Repos Git` (hay que importarlo a AZ Devops). 
+
+Podemos utilizar una plantilla predefinida, en este caso utilizamos la de `ASP.NET Core` por el tipo de código que tenemos en el repositorio. Finalmente, ordenamos `Save and Run`.
+
+Podemos consultar las ejecuciones de los `Jobs`
+
+## Crear una pipeline utilizando la vista clásica
+
+En AZ Devops, se navega Pipelines/Pipelines y se hace clic n `Create Pipelin`. 
+En el primer paso, se accede a la opción `Use the classic editor`.
+
+La opción clásica tiene varias desventajas y no es la forma standard que se utiliza en el año 2022.
+
+## Crear distintivos (badgers) de estado
+
+En AZ Devops, navegamos a Pipeline/Pipeline, seleccionamos una pipeline y hacemos clic en el icono de 3 puntos situado junto al `Run pipeline` (parte superior derecha). Seleccionamos `Status Badge` y podemos copiar tanto la `image url` como el `sample markdown`.
+
+Los distintivos se puden incrustar en varios sitios: en una Wiki, en un Dashboard, en el Readme del respositorio asociada a la pipeline, etc
+
