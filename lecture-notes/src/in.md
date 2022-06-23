@@ -190,24 +190,148 @@ Conjunto de herramientas de control de versiones para adminsitar el código. Se 
 - `Git` (sistema distribuído)
 - `TFVC` (sistema centralizado) Team Foundation VC
 
-## Crear repositorio en Azure Repos
+## Crear un AZ Repos Git
 
 Dentro del proyecto, se navega a `Repos` y haciendo clic en `+`, existe una opción para crear un repositorio. 
 
-También es posible importar un repo de un repositorio remoto (GitHub). Situados en en el tab `Repos`, en el panel superior se pude desplegar una ventana que contien la opción `Import repository`.
+También es posible importar un repositorio remoto (de GitHub). Situados en el tab `Repos`, en el panel superior se pude desplegar una ventana que contiene la opción `Import repository`.
 
 En el mismo desplegable existen una opción para gestionar los repositorios creados.
 
-## Clonar repositorio en VSCode
+## Subir código a AZ Repos Git
 
-Pasos:
+Vamos a partir de un AZ Repos Git vacío (o con el README). Lo vamos a sincronizar con un directorio local y luevo vamos a subir al repositorio de AZ DEvops código creado en local.
 
-- Crear un repositorio de git en AZ Devops
-- Situado en el repositorio, seleccionar `Clone` (panel superior, derecha)
-- Seleccioanar `Clone in VS Code` y seguir los pasos indicados
-- Hay que elgir el directorio donde se situa el repo
-- Es posible que se abra al `Git Crdential Manager`. En este caso hay que introducir las credenciales de nuestra cuenta de Microsoft.
-- 
+- Crear un nuevo `AZ Repos Git`.
+
+Dos formas para hacer la sincronización.
+
+1. Utilizando la opción `Clone in VS Code`
+
+    - Situados en el AZ Repos, seleccionar `Clone` (panel superior, derecha).
+    - Seleccioanar `Clone in VS Code` y seguir los pasos indicados.
+    - Hay que elegir el directorio local donde se situa el repo.
+    - Es posible que se abra una venta de `Git Credential Manager`. En este caso hay que introducir las credenciales de nuestra cuenta de Microsoft.
+
+2. Haciendo un `git clon` por línea de comandos:
+
+    - Situados en el AZ Repos, seleccionar `Clone` y copiamos la url del repositorio.
+    - Desde el directorio donde queremos incluir el repo, hacemos un `git clon <url>`
+
+En este punto (tras 1 o tras 2) los repositorios local y remoto ya están sincronizados. Si hacemos un `git remote -v` en el directorio local creado, se muestra la url del repositorio de AZ Devops:
+
+```bash
+$ git remote -v
+origin  https://rhodevops@dev.azure.com/rhodevops/20220617-azure-devops/_git/test (fetch)
+origin  https://rhodevops@dev.azure.com/rhodevops/20220617-azure-devops/_git/test (push)
+```
+
+Pasos para subir código (modo habitual):
+
+- Añadir/modificar archivos al repositorio local.
+- Subir archivos al stage y hacer commit.
+- `git remote -v` para verificar la url de subida
+- Hacer el push
+
+## Subir código a AZ Repos Git II
+
+Repositorio del laboratorio: `lab07001`
+
+Vamos a partir de un AZ Repos Git vacío (o con el README).
+
+Pasos para hacer la sincronización:
+
+- Crear un nuevo `AZ Repos Git`.
+- Situados en el repositorio, seleccionar `Clone` (panel superior, derecha).
+- Seleccioanar `Clone in VS Code` y seguir los pasos indicados.
+- Hay que elegir el directorio local donde se situa el repo.
+- Es posible que se abra una venta de `Git Credential Manager`. En este caso hay que introducir las credenciales de nuestra cuenta de Microsoft.
+- En este punto ya está sincronizado. Si hacemos un `git remote -v` se muestra la url del repositorio de AZ Devops.
+
+Pasos para subir código (modo habitual):
+
+- Añadir/modificar archivos al repositorio local.
+- Subir archivos al stage y hacer commit.
+- `git remote -v` para verificar la url de subida
+- Hacer el push
+
+## Crear ramas en el repositorio
+
+Repositorio del laboratorio: `lab07001`
+
+Dentro del proyecto de AZ Devops, se navega a `Repos - Branches` y se selecciona `New Branch`. Hay que indicar la rama antigua en la que se basa la nueva rama.
+
+En nuestro caso, consideraremos que la rama `main` es la de PRO. Vamos a crear la rama `PRE` basada en la de producción y la rama `DEV` basada en la rama de preproducción.
+
+Además utilizamos el desplegable de tres puntos de la rama `DEV` para establecer la rama de desarrollo como `default` and `compare`.
+
+## Política de ramas
+
+Repositorio del laboratorio: `lab07001`
+
+Las branch policies sirven para proteger las ramas ante prácticas indeseadas.
+
+Para configurar una política en una rama, navegamos a `Repos - Branches` del repo deseado y, en la rama objetivo, desplegamos las opciones de tres puntos y seleccionamos `Branch Policies`    
+
+Configuramos la rama `DEV` como se muestra en la figura `DEV Branch Policies`:
+
+- Se requiere aprobación por una persona
+- Se permite autoaprobar
+- Se requiere comentario
+
+![DEV Branch Policies](./images/DEV-branch-policies.PNG)
+
+Con estas políticas, cuando intentamos modificar un archivo de la rama `DEV` y hacer un commit del cambio, nos salta un error. El error nos indica que no está permitido hacer un push a la rama y que necesitamos usar una pull request para actualizar la rama.
+
+![Testing DEV Branch Policies](./lecture-notes/images/testing-DEV-branch-policies.PNG)
+
+En la siguiente sección se trata este caso.
+
+## Solicitud de cambios. Pull Request
+
+Repositorio del laboratorio: `lab07001`
+
+Conceptos previos:
+
+- Una `Pull Request` (`Merge Request` en GitLab) es una solicitud, p.e. de un desarrollador, para que el código que ha creado en su rama se integre en otra.
+- Normalmente la rama del desarrollador es de tipo `feature` y muere tras integrarse en una rama de mayor nivel como puede ser `DEV`.
+- La `Pull Request` normalmente es resuelta por una persona distinta a la persona que ha hecho la solicitud.
+
+El desarrollador crear una Pull Request:
+
+- Crear una rama de tipo feature basada en la rama `DEV`. 
+- Si la llamamos `feature/prueba-dev`, se crea una rama llamada `prueba-dev` dentro de la carpeta `feature`.
+
+![Feature branch based on DEV branch.](./lecture-notes/images/feature-branch-based-on-DEV-branch.PNG)
+
+- Modificar un archivo del repo en la rama de tipo feature y crear una `Pull Request`. 
+- La `Pull Request` se pude crear en `Repos - Files` o en `Repos - Pull Request`. 
+- En ambos casos hay que seleccionar la rama y el repo correspondiente.
+- Y en el segundo caso hay que explicitar en que rama (`DEV`) se integra la rama feature.
+- Completar los campos indicados en la solicitud. 
+- Debido a las policies establecidas en la rama `DEV` hay que que añadir un viewer.
+
+El devops gestiona la Pull Request y hace el `Approve`:
+
+- Si se aprecia algún fallo de código, el devops puede poner un comentario al desarrollador.
+- Debido a las políticas de la rama `DEV`, no se puede hacer el `Complete` hasta que no se resuelva el comentario, como se muesta en la figura `Pull Request. Comments must be resolved` (Si que se puede hacer un `Aprove` aunque no tiene mucho sentido). 
+
+![Pull Request. Comments must be resolved](./lecture-notes/images/Pull-Request-Comments-must-be-resolved.PNG)
+
+- El desarrollador resuelvo el fallo detectado, hace el commit correspondinte y acude a la `Pull Request` para hacer un `Reply and Resolve` en el comentario que le ha puesto el devops. El devops se encarga de ir poniendo en `Closed` o `Resolved` el estado de los distintos comentarios.
+
+![Pull Request. Reply and resolve](./lecture-notes/images/Pull-Request-Reply-and-resolve.PNG)
+
+- Resueltos los comentarios, el devops hace el `Approve` e inicia el `Conmplete`
+
+![Pull Request. Approve](./lecture-notes/images/Pull-Request-Approve.PNG)
+
+- Hay varios tipos de `Complete`, en este caso se hace un `Merge (no fast forward)`. Hay varias opciones a completar, entre ellas la eliminación de la rama que se ha integrado (habitual en la integración de ramas feature)
+
+![Pull Request. Complete merge](./lecture-notes/images/Pull-Request-Complete-merge.PNG)
+
+## Tags
+
 
 
 
