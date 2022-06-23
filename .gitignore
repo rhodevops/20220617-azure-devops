@@ -1,1 +1,11 @@
-workspace/
+# vcode
+*.vscode/*
+
+# Ignorar pdf generados por el makefile
+**/print
+
+# Ignore everything in workspace/labxxxxx
+workspace/lab*/*
+# But not these files...
+!.gitkeep
+
