@@ -183,7 +183,25 @@ Escribir la documentación general del proyecto.
 
 # Modulo Repos
 
+## ¿Qué es Azure Repos?
 
+Conjunto de herramientas de control de versiones para adminsitar el código. Se pude utilizar:
+
+- `Git` (sistema distribuído)
+- `TFVC` (sistema centralizado) Team Foundation VC
+
+## Crear repositorio en Azure Repos
+
+Dentro del proyecto, se navega a `Repos` y haciendo clic en `+`, existe una opción para crear un repositorio. 
+
+También es posible importar un repo de un repositorio remoto (GitHub). Situados en en el tab `Repos`, en el panel superior se pude desplegar una ventana que contien la opción `Import repository`.
+
+En el mismo desplegable existen una opción para gestionar los repositorios creados.
+
+Pasos para subir código a AZ Repos:
+
+- Crear un repositorio de git en AZ Devops
+- 
 
 
 
