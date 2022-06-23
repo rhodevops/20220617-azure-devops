@@ -198,11 +198,16 @@ También es posible importar un repo de un repositorio remoto (GitHub). Situados
 
 En el mismo desplegable existen una opción para gestionar los repositorios creados.
 
-Pasos para subir código a AZ Repos:
+## Clonar repositorio en VSCode
+
+Pasos:
 
 - Crear un repositorio de git en AZ Devops
+- Situado en el repositorio, seleccionar `Clone` (panel superior, derecha)
+- Seleccioanar `Clone in VS Code` y seguir los pasos indicados
+- Hay que elgir el directorio donde se situa el repo
+- Es posible que se abra al `Git Crdential Manager`. En este caso hay que introducir las credenciales de nuestra cuenta de Microsoft.
 - 
-
 
 
 
