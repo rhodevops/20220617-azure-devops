@@ -8,4 +8,4 @@ Los directorios `./workspace/lab*` pueden ser de dos tipos:
 2. De tipo `Git Submodule`
     - Añadidos/clonados con la orden `git submodule add <remote repo url>`
     - P.e. `<url>` puede ser la url de un repositorio remote de Azure Repos
-    - Ejemplo: `git submodule add https://dev.azure.com/<organization>/<project>/_git/<Azure Repos Git>`
+    - Ejemplo: `git submodule add https://dev.azure.com/<organization>/<project>/_git/<Azure Repo Git>`
