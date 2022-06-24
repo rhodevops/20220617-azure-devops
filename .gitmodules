@@ -1,0 +1,3 @@
+[submodule "workspace/lab0701"]
+	path = workspace/lab0701
+	url = https://dev.azure.com/rhodevops/20220617-azure-devops/_git/lab07001
