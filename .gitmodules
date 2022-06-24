@@ -1,3 +1,6 @@
 [submodule "workspace/lab0701"]
 	path = workspace/lab0701
 	url = https://dev.azure.com/rhodevops/20220617-azure-devops/_git/lab07001
+[submodule "workspace/lab0802-pipelines-dotnet-core"]
+	path = workspace/lab0802-pipelines-dotnet-core
+	url = https://dev.azure.com/rhodevops/20220617-azure-devops/_git/lab0802-pipelines-dotnet-core

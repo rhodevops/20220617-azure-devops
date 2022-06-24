@@ -493,15 +493,17 @@ Dentro del proyecto de Azure Devops, en `Project Settings` se navega a `Pipeline
 - El pool `Azure Pipelines` contiene los agentes proporcionados por Microsoft. 
 - El pool `Default` contiene los agentes creados por nosotros.
 
-## Crear una pipeline utilizando una plantilla I
+## Crear una pipeline con código en GitHub
 
-Repositorio del laboratorio: `lab0802-python-sample-vscode-flask-tutorial` (fork en GitHub)
+Repositorio del laboratorio: `FORK-python-sample-vscode-flask-tutorial` (fork en GitHub)
 
 Pipeline con código en GiHub:
 
 - Se siguen las indicaciones de [Create your first pipeline](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=python%2Ctfs-2018-2%2Cbrowser)
 - Se utiliza un fork de GitHub.
 - El archivo YAML de la pipeline se almacena en el repo de GitHub.
+- Si el YAML de la pipeline ya existe en GitHub, se puede seleccionar con la opción `Existing Azure Pipelines YAML file`.
+- Y en el caso de que se llame `azure-pipelines.yml` se detecta automáticamente.
 
 En GitHub hacemos un fork del proyecto [https://github.com/microsoft/python-sample-vscode-flask-tutorial](https://github.com/microsoft/python-sample-vscode-flask-tutorial) y lo nombramos `lab0802-python-sample-vscode-flask-tutorial`.
 
@@ -511,7 +513,7 @@ Uilizamos la plantilla `Python package`, por el tipo de código que tenemos en e
 
 Podemos consultar las ejecuciones de los `Jobs`.
 
-Editamos la pipeline para eliminar el job de la versión 3.5 de python.
+Editamos la pipeline para eliminar el job `Job Python35`.
 
 El código final es el siguiente:
 
@@ -552,9 +554,9 @@ steps:
   displayName: 'pytest'
 ```
 
-## Crear una pipeline utilizando una plantilla II
+## Crear una pipeline con código en Azure Devops
 
-Repositorio del laboratorio: `lab0803-pipelines-dotnet-core` (AZ Devops).
+Repositorio del laboratorio: `lab0802-pipelines-dotnet-core` (AZ Devops).
 
 Pipeline con código en Azure Repos Git:
 
@@ -617,6 +619,10 @@ steps:
       echo Región: ${{parameters.region}}
 ```
 
+Nota:
+
+- Las pipelines se pueden ordenar en carpeta en Azure Devops. Se gestiona desde la pestaña `Pipelines - pipelines`
+
 ## Crear una pipeline utilizando la vista clásica
 
 En AZ Devops, se navega Pipelines/Pipelines y se hace clic n `Create Pipeline`. 
@@ -630,3 +636,4 @@ En AZ Devops, navegamos a Pipeline/Pipeline, seleccionamos una pipeline y hacemo
 
 Los distintivos se puden incrustar en varios sitios: en una Wiki, en un Dashboard, en el Readme del respositorio asociada a la pipeline, etc
 
+## Configurar la ejecución de una pipeline en una Pull Request
