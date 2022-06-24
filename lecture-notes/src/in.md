@@ -22,6 +22,10 @@ AZ Devops es una plataforma que centraliza todo lo que necesita el ciclo de vida
 - Azure Test Plans $\to$ herramientas de pruebas
 - Azure Artifacts $\to$ gestor de paquetes
 
+# Diccionario de términos
+
+- Un `tab` es una `pestaña`
+
 # Configuración de la organización en AZ Devops
 
 Se navega a `Organization Settings` (abajo, izquierda)
@@ -194,7 +198,7 @@ Conjunto de herramientas de control de versiones para adminsitar el código. Se 
 
 Dentro del proyecto, se navega a `Repos` y haciendo clic en `+`, existe una opción para crear un repositorio. 
 
-También es posible importar un repositorio remoto (de GitHub). Situados en el tab `Repos`, en el panel superior se pude desplegar una ventana que contiene la opción `Import repository`.
+También es posible importar un repositorio remoto (de GitHub). Situados en la pestaña `Repos`, en el panel superior se pude desplegar una ventana que contiene la opción `Import repository`.
 
 En el mismo desplegable existen una opción para gestionar los repositorios creados.
 
@@ -235,7 +239,7 @@ Pasos para subir código (modo habitual):
 
 ## Subir código a AZ Repos Git II
 
-Repositorio del laboratorio: `lab07001`
+Repositorio del laboratorio: `lab0701`
 
 Vamos a partir de un AZ Repos Git vacío (o con el README).
 
@@ -257,17 +261,17 @@ Pasos para subir código (modo habitual):
 
 ## Crear ramas en el repositorio
 
-Repositorio del laboratorio: `lab07001`
+Repositorio del laboratorio: `lab0701`
 
 Dentro del proyecto de AZ Devops, se navega a `Repos - Branches` y se selecciona `New Branch`. Hay que indicar la rama antigua en la que se basa la nueva rama.
 
 En nuestro caso, consideraremos que la rama `main` es la de PRO. Vamos a crear la rama `PRE` basada en la de producción y la rama `DEV` basada en la rama de preproducción.
 
-Además utilizamos el desplegable de tres puntos de la rama `DEV` para establecer la rama de desarrollo como `default` and `compare`.
+Además utilizamos el desplegable de tres puntos de la rama `DEV` para establecer la rama de desarrollo como `default` y `compare`. Está última opción sirve para fijar una referencia cuando en en `Repos - Branches`, se utiliza la opción de tres puntios `Compare branches`.
 
 ## Política de ramas
 
-Repositorio del laboratorio: `lab07001`
+Repositorio del laboratorio: `lab0701`
 
 Las branch policies sirven para proteger las ramas ante prácticas indeseadas.
 
@@ -289,7 +293,7 @@ En la siguiente sección se trata este caso.
 
 ## Solicitud de cambios. Pull Request
 
-Repositorio del laboratorio: `lab07001`
+Repositorio del laboratorio: `lab0701`
 
 Conceptos previos:
 
@@ -332,6 +336,82 @@ El devops gestiona la Pull Request y hace el `Approve`:
 
 ## Tags
 
+Repositorio del laboratorio: `lab0701`
+
+Los tags sirven para etiquetar los distintos estados de un repositorio (commits) a lo largo de su vida. 
+
+- Pueden estar basados en commits, branches u otros tags.
+- Se puden tener varios tags en el mismo commit.
+- Pueden identificar versiones p.e. `2.3.1`
+- Pueden identificar otros aspectos p.e. `entrega-uat`
+
+Los tags se gestionan desde la pestaña `Repos - Tags`. Sin embargo, es más cómodo agregar un tag basado en un commit desde la pestaña `Repos - Commits`, utilizando las opciones de tres puntos.
+
+![Tags based on commits](./lecture-notes/images/Tags-based-on-commits.PNG)
+
+
+Desde `Repos - Tags`, se puede establecer el `compare` tag para establecerlo como referencia al utilizar la opción `Compare tags`.
+
+Algunos usos de los tags:
+
+- En `Repos - Files`, visualizar estados concretos del repo buscando por tags.
+- En `Repos - Tags`, utilizar la opción `Compare tags` y comparar por tags.
+
+## Concepto de fork
+
+Es importante distinguir los términos `clone` (proceso) y `fork` (concepto). 
+
+Es bastante esclarecedor pensar en `clone` como un comando de git que crea una copia de un repositorio y pensar en `fork` como la práctica que permite, bien hacer una bifurcación independiente de un proyecto, o bien iniciar una colaboración en un proyecto (si tengo permisos) realizando propuestas a través de pull requests.
+
+Las figuras `Clon repository` y `Fork repository` muestran de manera gráfica la situación. 
+
+![Clone repository](./lecture-notes/images/Clone-repository.PNG)
+
+![Fork repository](./lecture-notes/images/Fork-repository.PNG)
+
+Es importante tener claro que:
+
+- El `clon` se hace usando git, mientras que el `fork` se hace en la cuenta de GitHub.
+- El `clone` crea un copia en tu máquina local, mientras que el el `fork` crea una copia en tu cuenta de GitHub.
+
+Conceptos:
+
+- `Original Repo` El repositorio original.
+- `Forked Repo` El repositorio donde se encuentra la copia del original.
+
+Flujo de trabajo tras hacer un `fork`. Se distinguen dos casos:
+
+- Tengo permisos de escritura sobre el repo original
+    1. Tras hacer el `fork` en GitHub, se hace un `clon` a la máquina local.
+    2. Los cambios locales se `pushean` al repo forkeado.
+    3. Se envia una `pull request` al repo original para proponer cambios. 
+
+- No dispongo de permisos de escritura sobre el repo original
+    1. Idem anterior.
+    2. Idem anterior.
+    3. No puedo colaborar en el proyecto original.
+lab07001     
+## Forks en AZ Devops
+
+Repositorio del laboratorio: `lab0701`
+
+Se puden hacer por varios motivos:
+
+- Hacer pruebas sin afectar al repositorio original
+- Bifucar el repositorio par plantear otra solución
+- Etc
+
+Para crear un Fork:
+
+Se navega al repo en `Repos - Files` y en la opción de tres puntos (junto a `Clone`) se seleciona la opción `Fork`. En este caso, lo llamamos `Fork de lab0701` y aparecerá junto al resto de repos pero con el icono de repo en blanco y negro (en lugar del naranja habitual).
+
+Para hacer un `Pull Request` desde el Fork al Original:
+
+Situado en el repo del Fork, navegamos a la pestaña `Repos - Pull requests` y hacemos la peticion. En la imagen se muesta un ejemplo:
+
+![Forks. Pull request](./lecture-notes/images/Forks-Pull-request.png)
+
+## Práctica
 
 
 

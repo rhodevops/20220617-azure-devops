@@ -1,5 +1,6 @@
 # vcode
 *.vscode/*
+*.code-workspace
 
 # Ignorar pdf generados por el makefile
 **/print
