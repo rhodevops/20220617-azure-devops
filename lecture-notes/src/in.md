@@ -239,7 +239,7 @@ Pasos para subir código (modo habitual):
 
 ## Subir código a AZ Repos Git II
 
-Repositorio del laboratorio: `lab0701`
+Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Vamos a partir de un AZ Repos Git vacío (o con el README).
 
@@ -261,7 +261,7 @@ Pasos para subir código (modo habitual):
 
 ## Crear ramas en el repositorio
 
-Repositorio del laboratorio: `lab0701`
+Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Dentro del proyecto de AZ Devops, se navega a `Repos - Branches` y se selecciona `New Branch`. Hay que indicar la rama antigua en la que se basa la nueva rama.
 
@@ -271,7 +271,7 @@ Además utilizamos el desplegable de tres puntos de la rama `DEV` para establece
 
 ## Política de ramas
 
-Repositorio del laboratorio: `lab0701`
+Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Las branch policies sirven para proteger las ramas ante prácticas indeseadas.
 
@@ -293,12 +293,12 @@ En la siguiente sección se trata este caso.
 
 ## Solicitud de cambios. Pull Request
 
-Repositorio del laboratorio: `lab0701`
+Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Conceptos previos:
 
 - Una `Pull Request` (`Merge Request` en GitLab) es una solicitud, p.e. de un desarrollador, para que el código que ha creado en su rama se integre en otra.
-- Normalmente la rama del desarrollador es de tipo `feature` y muere tras integrarse en una rama de mayor nivel como puede ser `DEV`.
+- Normalmente la rama del desarrollad[](laboratorio:%20%60lab0701%60)or es de tipo `feature` y muere tras integrarse en una rama de mayor nivel como puede ser `DEV`.
 - La `Pull Request` normalmente es resuelta por una persona distinta a la persona que ha hecho la solicitud.
 
 El desarrollador crear una Pull Request:
@@ -336,7 +336,7 @@ El devops gestiona la Pull Request y hace el `Approve`:
 
 ## Tags
 
-Repositorio del laboratorio: `lab0701`
+Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Los tags sirven para etiquetar los distintos estados de un repositorio (commits) a lo largo de su vida. 
 
@@ -390,10 +390,10 @@ Flujo de trabajo tras hacer un `fork`. Se distinguen dos casos:
     1. Idem anterior.
     2. Idem anterior.
     3. No puedo colaborar en el proyecto original.
-lab07001     
+  
 ## Forks en AZ Devops
 
-Repositorio del laboratorio: `lab0701`
+Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Se puden hacer por varios motivos:
 
@@ -410,11 +410,6 @@ Para hacer un `Pull Request` desde el Fork al Original:
 Situado en el repo del Fork, navegamos a la pestaña `Repos - Pull requests` y hacemos la peticion. En la imagen se muesta un ejemplo:
 
 ![Forks. Pull request](./lecture-notes/images/Forks-Pull-request.png)
-
-## Práctica
-
-
-
 
 # Módulo pipelines CI
 
@@ -453,6 +448,8 @@ Consultar [docs.microsoft.com/es-es/azure/devops/pipelines](https://docs.microso
 Si se utilizan agentes autohospedadado, el mantenimiento corre de tu parte.
 
 ## Lab: crear un agente self-hosted usando una azure vm
+
+Repositorio del laboratorio: `lab0801` (local)
 
 Este laboratorio también se puede hace usando una máquina local en lugar de la Azure vm.
 
@@ -496,20 +493,136 @@ Dentro del proyecto de Azure Devops, en `Project Settings` se navega a `Pipeline
 - El pool `Azure Pipelines` contiene los agentes proporcionados por Microsoft. 
 - El pool `Default` contiene los agentes creados por nosotros.
 
-## Crear una pipeline utilizando una plantilla
+## Crear una pipeline utilizando una plantilla I
 
-En AZ Devops, se navega Pipelines/Pipelines y se hace clic en `Create Pipelin`. En este caso, se indica que el código está en un `Azure Repos Git` (hay que importarlo a AZ Devops). 
+Repositorio del laboratorio: `lab0802-python-sample-vscode-flask-tutorial` (fork en GitHub)
+
+Pipeline con código en GiHub:
+
+- Se siguen las indicaciones de [Create your first pipeline](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=python%2Ctfs-2018-2%2Cbrowser)
+- Se utiliza un fork de GitHub.
+- El archivo YAML de la pipeline se almacena en el repo de GitHub.
+
+En GitHub hacemos un fork del proyecto [https://github.com/microsoft/python-sample-vscode-flask-tutorial](https://github.com/microsoft/python-sample-vscode-flask-tutorial) y lo nombramos `lab0802-python-sample-vscode-flask-tutorial`.
+
+En AZ Devops, se navega Pipelines/Pipelines y se hace clic en `Create Pipeline`. En este caso, se indica que el código está en `GitHub`.
+
+Uilizamos la plantilla `Python package`, por el tipo de código que tenemos en el repositorio. Finalmente, ordenamos `Save and Run`.
+
+Podemos consultar las ejecuciones de los `Jobs`.
+
+Editamos la pipeline para eliminar el job de la versión 3.5 de python.
+
+El código final es el siguiente:
+
+```yaml
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python27:
+      python.version: '2.7'
+    Python36:
+      python.version: '3.6'
+    Python37:
+      python.version: '3.7'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    pip install pytest pytest-azurepipelines
+    pytest
+  displayName: 'pytest'
+```
+
+## Crear una pipeline utilizando una plantilla II
+
+Repositorio del laboratorio: `lab0803-pipelines-dotnet-core` (AZ Devops).
+
+Pipeline con código en Azure Repos Git:
+
+- Se utiliza un repo de Azure Devops.
+- El archivo YAML de la pipeline se almacena en el repo de Azure Devops.
+
+Se crea un repo en AZ Devops importándolo (clon) de GitHub. El projecto es [https://github.com/MicrosoftDocs/pipelines-dotnet-core](https://github.com/MicrosoftDocs/pipelines-dotnet-corel). Se pone de nombre `lab0803-pipelines-dotnet-core`.
+
+En AZ Devops, se navega a `Pipelines/Pipelines` y se hace clic en `Create Pipeline`. En este caso, se indica que el código está en un `Azure Repos Git`. 
 
 Podemos utilizar una plantilla predefinida, en este caso utilizamos la de `ASP.NET Core` por el tipo de código que tenemos en el repositorio. Finalmente, ordenamos `Save and Run`.
 
-Podemos consultar las ejecuciones de los `Jobs`
+Podemos consultar las ejecuciones de los `Jobs`.
+
+Se edita la pipeline con lo siguiente:
+
+- Un `steps.task` que contiene dos `echo` de terminal bash
+- Para introducir lo anterior se utiliza el panel de ayuda `Tasks`
+- Parámetros `environment` y `region` para seleccionar antes de ejecutar la pipeline.
+
+El código final es el siguiente:
+
+```yaml
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: environment
+    type: string
+    displayName: Environment
+    values:
+      - PRE
+      - PRO
+  - name: region
+    type: string
+    displayName: Region
+    values:
+      - EU
+      - US
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Entorno de ejecución: ${{parameters.environment}}
+      
+      echo Región: ${{parameters.region}}
+```
 
 ## Crear una pipeline utilizando la vista clásica
 
-En AZ Devops, se navega Pipelines/Pipelines y se hace clic n `Create Pipelin`. 
+En AZ Devops, se navega Pipelines/Pipelines y se hace clic n `Create Pipeline`. 
 En el primer paso, se accede a la opción `Use the classic editor`.
 
-La opción clásica tiene varias desventajas y no es la forma standard que se utiliza en el año 2022.
+La opción clásica tiene varias desventajas y no es la forma standard que se utiliza en el año 2022. ¿Genera archivo YAML?
 
 ## Crear distintivos (badgers) de estado
 
