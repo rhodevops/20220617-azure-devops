@@ -755,5 +755,49 @@ jobs:
 Notas del código:
 
 - La propiedad `pipelines.name` define el número de ejecución de la pipeline
-- La variable `$(Rev:.r)` sirve como contador del número de ejecuciones (si se mantiene el mismo nombre).
-- Por defecto `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
+- La variable `$(Rev:.r)` sirve como contador del número de ejecuciones de la pipeline.
+- El valor por defecto de `pipelines.name` es `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
+
+### Pipeline 2
+
+Código:
+
+```yaml
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
+
+trigger:
+  branches:
+    include:
+      - master
+    exclude:
+      - DEV
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  name: Roberto
+
+jobs:
+  - job: trabajo1
+    steps:
+      - script: echo Hello, $(name)
+        displayName: Say Hello
+
+  - job: trabajo2
+    steps:
+      - script: echo Bye, $(name)
+        displayName: Say Bye
+```
+
+Notas del código:
+
+- La propiedad `pipelines.name` define el número de ejecución de la pipeline
+- La variable `$(Rev:.r)` sirve como contador del número de ejecuciones de la pipeline.
+- El valor por defecto de `pipelines.name` es `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
+
