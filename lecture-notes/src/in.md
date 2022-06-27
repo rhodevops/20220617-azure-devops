@@ -275,7 +275,13 @@ Repositorio del laboratorio: `lab0701` (AZ Devops)
 
 Las branch policies sirven para proteger las ramas ante prácticas indeseadas.
 
-Para configurar una política en una rama, navegamos a `Repos - Branches` del repo deseado y, en la rama objetivo, desplegamos las opciones de tres puntos y seleccionamos `Branch Policies`    
+Para configurar una política en una rama, navegamos a `Repos - Branches` del repo deseado y, en la rama objetivo, desplegamos las opciones de tres puntos y seleccionamos `Branch Policies` 
+
+![DEV Branch Policies](./lecture-notes/images/DEV-branch-policies.PNG)
+
+Observar la nota bajo el título de la ventana emergente:
+
+> If any required policy is enabled, this branch cannot be deleted and **changes must be made via pull request**.
 
 Configuramos la rama `DEV` como se muestra en la figura `DEV Branch Policies`:
 
@@ -283,9 +289,7 @@ Configuramos la rama `DEV` como se muestra en la figura `DEV Branch Policies`:
 - Se permite autoaprobar
 - Se requiere comentario
 
-![DEV Branch Policies](./images/DEV-branch-policies.PNG)
-
-Con estas políticas, cuando intentamos modificar un archivo de la rama `DEV` y hacer un commit del cambio, nos salta un error. El error nos indica que no está permitido hacer un push a la rama y que necesitamos usar una pull request para actualizar la rama.
+Al establecer políticas, cuando intentemos modificar un archivo de la rama `DEV` y hacer un commit del cambio, nos saltara un error. El error nos indicará que que los cambios deben hacerser vía pull requests.
 
 ![Testing DEV Branch Policies](./lecture-notes/images/testing-DEV-branch-policies.PNG)
 
@@ -505,6 +509,8 @@ Pipeline con código en GiHub:
 - Si el YAML de la pipeline ya existe en GitHub, se puede seleccionar con la opción `Existing Azure Pipelines YAML file`.
 - Y en el caso de que se llame `azure-pipelines.yml` se detecta automáticamente.
 
+> By default, a pipeline's default branch is the default branch of the repository.
+
 En GitHub hacemos un fork del proyecto [https://github.com/microsoft/python-sample-vscode-flask-tutorial](https://github.com/microsoft/python-sample-vscode-flask-tutorial) y lo nombramos `lab0802-python-sample-vscode-flask-tutorial`.
 
 En AZ Devops, se navega Pipelines/Pipelines y se hace clic en `Create Pipeline`. En este caso, se indica que el código está en `GitHub`.
@@ -553,6 +559,10 @@ steps:
     pytest
   displayName: 'pytest'
 ```
+
+Nota importante:
+
+- Obersevar que la pipeline, dentro de un repositorio, se crea en la `default branch`.
 
 ## Crear una pipeline con código en Azure Devops
 
@@ -637,3 +647,44 @@ En AZ Devops, navegamos a Pipeline/Pipeline, seleccionamos una pipeline y hacemo
 Los distintivos se puden incrustar en varios sitios: en una Wiki, en un Dashboard, en el Readme del respositorio asociada a la pipeline, etc
 
 ## Configurar la ejecución de una pipeline en una Pull Request
+
+Repositorio del laboratorio: `lab0701` (AZ Devops).
+
+### Parte 1. Ejecutar una pipeline en una rama protegida por policies 
+
+Notas iniciales:
+
+- `DEV` es la default branch 
+- `DEV` está protegida por policies (**changes must be made via pull request**.)
+
+En la pestaña `Pipelines - pipelines`, se crear una pipeline de la forma habitual, pero como no se puede hacer un commit directo a la rama `DEV`, es necesario crear una rama para hacer el commit, se llamará `azure-pipelines-add`.
+
+![New pipeline with pull request](./lecture-notes/images/New-pipeline-with-pull-request.PNG)
+
+
+### Parte 2. Configurar una pipeline de CI
+
+El objetivo es configurar una pipeline que se ejecutará cada vez que haya un cambio en el código del repositorio.
+
+En la pestaña, `Files - Branches`, se configura una policie sobre la rama `DEV` de tipo `Build validation`.
+
+![DEV policies. Build validation](./lecture-notes/images/DEV-policies-Build-validation.PNG)
+
+Se dejan las opciones por defecto. Observar la opción `Triger.Automatic` que dispara la pipeline cada vez que la `source branch` se actualiza (CI).
+
+![CI pipeline. Configuration of buid validation](./lecture-notes/images/CI-pipeline-Configuration-of-buid-validation.PNG)
+
+### Parte 3. Probar la pipeline de CI
+
+Para probar la pipeline de CI:
+
+- Se crea una nueva rama `feature/pipeline-test`
+- Se hace un cambio/commit sobre la rama creada
+- Se abre una pull request a la rama DEV
+
+![New branch feature: pipeline-test](./lecture-notes/images/New-branch-Feature-pipeline-test.PNG)
+)
+
+En la figura `Test a CI pipeline`, se observan los requerimientos que deben cumplirse para que se complete la pull request.
+
+![Test a CI pipeline](./lecture-notes/images/Test-a-CI-pipeline.PNG)
