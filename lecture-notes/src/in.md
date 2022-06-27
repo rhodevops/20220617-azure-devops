@@ -5,6 +5,14 @@ author: Roberto Negro
 date: 17/06/2022
 ---
 
+# Diccionario de términos
+
+| término         | equivalentes | traducciones | 
+| --------------- | ------------ | ------------ | 
+| tab             |              | pestaña      |                                    
+| Azure Repos Git | AZ Repo      |              | 
+|                 |              |              |                                    
+                                 
 # Introducción
 
 ## Definiciones y algunas instalaciones
@@ -21,10 +29,6 @@ AZ Devops es una plataforma que centraliza todo lo que necesita el ciclo de vida
 - Azure Boards $\to$ gestión del proyecto
 - Azure Test Plans $\to$ herramientas de pruebas
 - Azure Artifacts $\to$ gestor de paquetes
-
-# Diccionario de términos
-
-- Un `tab` es una `pestaña`
 
 # Configuración de la organización en AZ Devops
 
@@ -239,7 +243,7 @@ Pasos para subir código (modo habitual):
 
 ## Subir código a AZ Repos Git II
 
-Repositorio del laboratorio: `lab0701` (AZ Devops)
+Repositorio del laboratorio: `lab0701`
 
 Vamos a partir de un AZ Repos Git vacío (o con el README).
 
@@ -261,7 +265,7 @@ Pasos para subir código (modo habitual):
 
 ## Crear ramas en el repositorio
 
-Repositorio del laboratorio: `lab0701` (AZ Devops)
+Repositorio del laboratorio: `lab0701`
 
 Dentro del proyecto de AZ Devops, se navega a `Repos - Branches` y se selecciona `New Branch`. Hay que indicar la rama antigua en la que se basa la nueva rama.
 
@@ -271,7 +275,7 @@ Además utilizamos el desplegable de tres puntos de la rama `DEV` para establece
 
 ## Política de ramas
 
-Repositorio del laboratorio: `lab0701` (AZ Devops)
+Repositorio del laboratorio: `lab0701` 
 
 Las branch policies sirven para proteger las ramas ante prácticas indeseadas.
 
@@ -297,7 +301,7 @@ En la siguiente sección se trata este caso.
 
 ## Solicitud de cambios. Pull Request
 
-Repositorio del laboratorio: `lab0701` (AZ Devops)
+Repositorio del laboratorio: `lab0701` 
 
 Conceptos previos:
 
@@ -340,7 +344,7 @@ El devops gestiona la Pull Request y hace el `Approve`:
 
 ## Tags
 
-Repositorio del laboratorio: `lab0701` (AZ Devops)
+Repositorio del laboratorio: `lab0701`
 
 Los tags sirven para etiquetar los distintos estados de un repositorio (commits) a lo largo de su vida. 
 
@@ -397,7 +401,7 @@ Flujo de trabajo tras hacer un `fork`. Se distinguen dos casos:
   
 ## Forks en AZ Devops
 
-Repositorio del laboratorio: `lab0701` (AZ Devops)
+Repositorio del laboratorio: `lab0701` 
 
 Se puden hacer por varios motivos:
 
@@ -509,8 +513,6 @@ Pipeline con código en GiHub:
 - Si el YAML de la pipeline ya existe en GitHub, se puede seleccionar con la opción `Existing Azure Pipelines YAML file`.
 - Y en el caso de que se llame `azure-pipelines.yml` se detecta automáticamente.
 
-> By default, a pipeline's default branch is the default branch of the repository.
-
 En GitHub hacemos un fork del proyecto [https://github.com/microsoft/python-sample-vscode-flask-tutorial](https://github.com/microsoft/python-sample-vscode-flask-tutorial) y lo nombramos `lab0802-python-sample-vscode-flask-tutorial`.
 
 En AZ Devops, se navega Pipelines/Pipelines y se hace clic en `Create Pipeline`. En este caso, se indica que el código está en `GitHub`.
@@ -560,13 +562,15 @@ steps:
   displayName: 'pytest'
 ```
 
-Nota importante:
+Notas importantes:
 
-- Obersevar que la pipeline, dentro de un repositorio, se crea en la `default branch`.
+- Por defecto, la rama por defecto de la pipeline es la `default branch` del repo.
+- Las pipelines creadas desde la pestaña `Pipelines` se crean en la `default branch`.
+- Para crear una pipeline en otra rama, hay que hacerlo desde la pestaña `Repos - Files`. La opción se llama `Set up build`.
 
 ## Crear una pipeline con código en Azure Devops
 
-Repositorio del laboratorio: `lab0802-pipelines-dotnet-core` (AZ Devops).
+Repositorio del laboratorio: `lab0802-pipelines-dotnet-core`
 
 Pipeline con código en Azure Repos Git:
 
@@ -648,7 +652,7 @@ Los distintivos se puden incrustar en varios sitios: en una Wiki, en un Dashboar
 
 ## Configurar la ejecución de una pipeline en una Pull Request
 
-Repositorio del laboratorio: `lab0701` (AZ Devops).
+Repositorio del laboratorio: `lab0701`
 
 ### Parte 1. Ejecutar una pipeline en una rama protegida por policies 
 
@@ -664,7 +668,7 @@ En la pestaña `Pipelines - pipelines`, se crear una pipeline de la forma habitu
 
 ### Parte 2. Configurar una pipeline de CI
 
-El objetivo es configurar una pipeline que se ejecutará cada vez que haya un cambio en el código del repositorio.
+El objetivo es configurar una pipeline que se ejecutará cada vez que haya una pull request hacia la rama DEV.
 
 En la pestaña, `Files - Branches`, se configura una policie sobre la rama `DEV` de tipo `Build validation`.
 
@@ -688,3 +692,68 @@ Para probar la pipeline de CI:
 En la figura `Test a CI pipeline`, se observan los requerimientos que deben cumplirse para que se complete la pull request.
 
 ![Test a CI pipeline](./lecture-notes/images/Test-a-CI-pipeline.PNG)
+
+## Configurar la ejecución de una pipeline tras un cambio en una rama
+
+Repositorio del laboratorio: `lab0802-pipelines-dotnet-core` 
+
+La propiedad `pipeline.trigger` especifica que rama causa la ejecución de un trabajo de CI. En el caso del código mostrado, un cambio en la rama `master` hace que se dispare la pipeline:
+
+```yaml
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+[...]
+```
+
+**Nota importantes** Cuando una pipeline que requiere paso de parámetros (intervención manual) se dispara automáticamente, debido a un commit, la ejecución da error. Precisamente porque no se ha pasado el parámetro. Investigar una posible solución.
+
+## Crear el código YAML de una pipeline
+
+Repositorio del laboratorio: `lab0803-pipelines`
+
+### Pipeline 1
+
+Código:
+
+```yaml
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
+
+trigger:
+  branches:
+    include:
+      - master
+    exclude:
+      - DEV
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  name: Roberto
+
+jobs:
+  - job: trabajo1
+    steps:
+      - script: echo Hello, $(name)
+        displayName: Say Hello
+
+  - job: trabajo2
+    steps:
+      - script: echo Bye, $(name)
+        displayName: Say Bye
+```
+
+Notas del código:
+
+- La propiedad `pipelines.name` define el número de ejecución de la pipeline
+- La variable `$(Rev:.r)` sirve como contador del número de ejecuciones (si se mantiene el mismo nombre).
+- Por defecto `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
