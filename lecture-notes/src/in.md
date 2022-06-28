@@ -1062,47 +1062,72 @@ Tras crear la Release Pipeline y realizar el deploy, se verá lo que muestra la 
 
 ![Web App on DEV. Deployment](/lecture-notes/images/Web-App-on-DEV-Deployment.PNG)
 
-### Crear la Release Pipeline
+### Crear y configurar una Release Pipeline
 
-En la pestaña `Pipelines - Releases` , se utiliza la opción `New Release Pipeline` . Tenemos que configurar la siguientes pestañas:
+En la pestaña `Pipelines - Releases` , se utiliza la opción `New Release Pipeline` . 
 
-- Pipeline
-- Tasks
+Hay que añadir los `Artifacts` y los `Stages` como se muestra en la Figura. El esquema se muesta en la pestaña `Pìpeline`. Como mínimo la Release Pipeline debe contener un artefacto y un stage.
 
-El resto las dejamos con los valores por defecto.
+#### Añadir un Stage
 
-En la pestaña Pipeline, seleccionamos la template `Azure App Service deployment`, que será la primera `task` del primer `Stage`, al que llamaremo `DEV`.
+![Release pipeline. Artifacts and stages.PNG](/lecture-notes/images/Release-pipeline-Artifacts-and-stages.PNG)
+
+Hay dos pestañas fundamentales:
+
+- `Pipeline` Se muestra el esquema gráfico de la pipeline
+- `Tasks` Se configuran las tasks del Stage seleccionado
+
+El resto de pestañas las vamos a dejar con los valores por defecto.
+
+En nuestra práctica, vamos a configurar un stage llamado `DEV` que va a constar de la tarea `Azure App Service deployment`; se utiliza la template del mismo nombre.
 
 ![Azure app service deployment](/lecture-notes/images/Azure-app-service-deployment.png)
 
-Seleccionando el `Stage DEV`, nos movemos a la pestaña `tasks` y configuramos la tarea. Lo primero que hay que hacer es la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura `Configure an Azure service connection`.
+Para que la task funcione, hay que hacer la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura `Configure an Azure service connection`.
 
 ![Configure an Azure service connection](/lecture-notes/images/Configure-an-Azure-service-connection.PNG)
 
-Se pueden ver la configuración completa en la Figura `Release pipeline. Deploy AZ App Service`
+Se puede ver la configuración completa de la task en la Figura `Release pipeline. Deploy AZ App Service`.
 
 ![Release pipeline. Deploy AZ App Service](/lecture-notes/images/Release-pipeline-Deploy-AZ-App-Service.PNG)
 
-En este punto podríamos hacer varias cosas:
+En este punto podríamos añadir más tasks dentro del mismo Stage.
 
-- Añadir más tasks dentro del Stage
-- Crear otro Stage distinto con otras tasks
+#### Añadir un artifact
 
-
-
-
-
-
-![New release pipeline](/lecture-notes/images/New-release-pipeline.PNG)
-
-
-### Ejecutar la Release Pipeline
+Hay varios tipos de fuente que podemos utilizar para añadir un artifact. Se muestran en la Figura. Como nosotros hemos tenemos una `Build Pipeline` mediante a cual generamos el artefacto, seleccionamos la opción `Build`
 
 ![Release pipeline. Add an artifact](/lecture-notes/images/Release-pipeline-Add-an-artifact.PNG)
-![Release pipeline. Add an artifact 2](/lecture-notes/images/Release-pipeline-Add-an-artifact-2.PNG)
-![Release pipeline. CD trigger](/lecture-notes/images/Release-pipeline-CD-trigger.PNG)
-![Release pipeline. Create release](/lecture-notes/images/Release-pipeline-Create-release.PNG)
-![Release pipeline. Create release 2](/lecture-notes/images/Release-pipeline-Create-release-2.PNG)
 
-![Release pipeline. Deployment](/lecture-notes/images/Release-pipeline-Deployment.PNG)
-![Release pipeline](/lecture-notes/images/Release-pipeline.PNG)
+En la Figura `Release pipeline. Add an artifact 2` se muesta la configuración del artefacto. Observar que AZ Devops detecta que ya hemos ejecutado la pipeline que genera el artefacto de nombre `drop`.
+
+![Release pipeline. Add an artifact 2](/lecture-notes/images/Release-pipeline-Add-an-artifact-2.PNG)
+
+En la Figura `Release pipeline. CD trigger` se muestra como activar el trigger de despliegue continuo (CD)
+
+![Release pipeline. CD trigger](/lecture-notes/images/Release-pipeline-CD-trigger.PNG)
+
+El la siguiente Figura se muestra el resultado final de la `Release pipeline`, tras añadir los artifacts y stages deseados. Se finaliza haciendo un `save`. 
+
+![Release pipeline. Save](/lecture-notes/images/Release-pipeline-Save.PNG)
+
+### Crear una Release
+
+Tras guardar la Release Pipeline, hay que hacer un `Create Release`.
+
+En el caso de que hayamos cerrado ventanas, navegamos a `Pipelines - Releases`, buscamos la `Release Pipeline` que nos interesa y utilizamos la opción `Create release` (ver Figura)
+
+![Create Release](/lecture-notes/images/Create-Release.PNG)
+
+Hay varias formas para ejecutar el `Deploy`. En la Figura `Create Release. Deploy` se muestra una de ellas:
+
+![Create Release. Deploy](/lecture-notes/images/Create-Release-Deploy.PNG)
+
+Por último, se indican las opciones que correspondan y se lanza la Release:
+
+![Create Release. Deployment options](/lecture-notes/images/Create-Release-Deployment-options.PNG)
+
+## Flujo completo de CI/CD
+
+
+
