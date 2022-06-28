@@ -639,10 +639,25 @@ Nota:
 
 ## Crear una pipeline utilizando la vista clásica
 
-En AZ Devops, se navega Pipelines/Pipelines y se hace clic n `Create Pipeline`. 
+En AZ Devops, se navega Pipelines/Pipelines y se hace clic en `Create Pipeline`. 
 En el primer paso, se accede a la opción `Use the classic editor`.
 
-La opción clásica tiene varias desventajas y no es la forma standard que se utiliza en el año 2022. ¿Genera archivo YAML?
+Uso de la vista clásica para generar YAML:
+
+- Crear una pipeline clasica.
+- Editarla y situarse en el `Agente Job` como se muesta en la figura `Pipeline classic editor. View yaml`.
+- En la misma figura, se observa la opción `View YAML` que se puede utilizar.
+- Crear una nueva pipeline con el código YAML generado.
+- ¡Cuidado! Podemos tener problemas con las variables de entorno o conexiones a servidores.
+- Revisar el código una vez generado.
+
+![Pipeline classic editor. View yaml](/lecture-notes/images/Pipeline-classic-editor-View-yaml.png)
+
+Otra opción, es exportar pipeline clásica a YAML:
+
+- En la pestaña `Pipelines - Pipelines`, se accede a la classic pipeline que nos interese.
+- Dentro, junto a la opción `Run pipeline`, se utiliza el desplegable de tres puntos.
+- Se utilizar la opción `Export to YAML` para generar el archivo YAML.
 
 ## Crear distintivos (badgers) de estado
 
@@ -739,11 +754,10 @@ Constituyen la estructura de una pipeline "completa".
 - Un `stage` es un escenario o etapa de ejecución. 
 - Un `job` es un trabajo dentro de un stage.
 - Los `steps` son secuencias lineales de operaciones dentro de un job. Varios tipos:
-  - `steps.task`
+  - `steps.task` es un bloque de código de una pipeline. 
   - `steps.script`
   - `steps.bash`
   - etc
-- Una `task` es un bloque de código de una pipeline. AZ Devops nos ofrece una catálago de tasks.
 
 Hay que aclarar que una pipeline simple no requiere de todos estos niveles. 
 
@@ -832,7 +846,7 @@ Notas del código:
 - La variable `$(Rev:.r)` sirve como contador del número de ejecuciones de la pipeline.
 - El valor por defecto de `pipelines.name` es `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
 
-## Pipeline 02: parameters
+### Pipeline 02: parameters
 
 Código:
 
@@ -881,7 +895,7 @@ Notas del código:
 - El valor de la variable `$(vmImage)` está condicionado al valor del parámetro `parameters.vmImage` que se le pasa a la pipeline.
 - La propiedad `jobs.job.dependsOn` se utiliza para indicar que un trabajo depende de otro. En la práctica se traduce en que uno se ejecuta antes que otro.
 
-## Pipeline 03: stages y steps
+### Pipeline 03: stages y steps
 
 Jerárquicamente, tenemos `stages`, `jobs`, `steps`.
 
@@ -932,77 +946,163 @@ stages:
           - script: echo Este es el trabajo B
 ```
 
-## Pipeline 04: task
+### Tasks y artifacts
 
-Código:
+Una `steps.task` es un bloque de código de una pipeline. 
+
+- AZ Devops nos ofrece una catálago de tasks.
+- AZ Devops dispone de un "wizard" para incorporar las tasks al código YAML
+- El número tras `@` hace referencia a la versión de la task.
+
+Algunas de las tasks más utilizadas son las relacionadas con la generación y publicación de `artifacts`.
+
+Un `artifact` es un componente desplegable de tu aplicación.
+
+Las tasks `PublishPipelineArtifact@1` y `DownloadPipelineArtifact@2` se utilizan para publicar y descargar artefactos.
+
+La variable predefinida `$(build.artifactstagingdirectory)` almacena la ruta de acceso local en el agente donde se copian los artefactos antes de ser pusheados a su destino. Este directorio se purga solo antes de cada build.
+
+En 2022 se recomienda usar `PublishPipelineArtifact@1` y `DownloadPipelineArtifact@2` en lugar de `PublishBuildArtifacts@1` y `DownloadBuildArtifacts@0` respectivamente. 
+
+# Módulo pipelines CD
+
+## Introducción
+
+Vamos a aprender a hacer despliegues a traves de Release
+
+## Crear la primera release
+
+### Crear repositorio
+
+Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`
+
+Se clona en AZ devops el repo [MicrosoftDocs/pipelines-dotnet-core.git](https://github.com/MicrosoftDocs/pipelines-dotnet-core.git)
+
+Se crea la siguiente pipeline:
 
 ```yaml
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
-
-pool:
-  vmImage: ubuntu-20.04
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-### Pipeline n
-
-Código:
-
-```yaml
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+- master
 
 pool:
   vmImage: ubuntu-latest
 
-parameters:
-  - name: language
-    values:
-      - Spanish
-      - English
-
 variables:
-  - name: nombre
-    value: Roberto
-  - ${{ if eq(parameters.language, 'Spanish') }}:
-    - name: saludar
-      value: hola
-  - ${{ if eq(parameters.language, 'English') }}:
-    - name: saludar
-      value: hello
+ Parameters.RestoreBuildProjects : '**/*.csproj'
+ Parameters.TestProjects: '**/*.csproj'
+ BuildConfiguration: 'Release'
 
 steps:
-- script: echo $(saludar) $(nombre)!
-  displayName: 'Saludo'
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '$(Parameters.RestoreBuildProjects)'
 
-- script: |
-    echo Tu usuario es Us$(nombre)
-    echo Tu contraseña es $(ROBERTOPASSWORD)
-  displayName: 'Usuario y contraseña'
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '$(Parameters.RestoreBuildProjects)'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '$(Parameters.TestProjects)'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  condition: succeededOrFailed()
 ```
 
-Notas del código:
+Notas de las tasks:
 
-- El valor de la variable `variables.saludar` está condicionado al valor del parámetro `parameters.language` que se le pasa a la pipeline.
+- `DotNetCoreCLI@2` para compilar, probar, empaquetar o publicar una aplicación `.NET CORE`
+- `PublishBuildArtifacts@1` para publicar artifacts
 
+Podemos navegar hasta el artefacto publicado utilizando el enlace situado en el resumen de la ejecución de la pipeline, como se muestra en la figura `Artifacts published`.
+
+![Artifacts published](./lecture-notes/images/Artifacts-published.PNG)
+
+### Crear entornos en Azure
+
+Se supone que se puede hace gratis (hasta 10 aplicaciones). Vamos a crear dos recursos de  `Web App`, uno para el entorno `DEV` y otro para `PRO`.
+
+Seguir en Azure los siguientes pasos:
+
+1. Pasos en Azure para crear una `Web App` para el entorno `DEV`:
+  - Crear un grupo de recursos para alojar la `Web App`.
+  - Crear el recurso `Web App` .
+  - Incluir `DEV` en el nombre del recurso.
+  - Hay que tener en cuenta que, en nuestro caso, es una aplicación `.NET Core`.
+  - En el mismo sitio, se crea un `App Service Plan`.
+  - Se escoge la opción `Free`.
+  - Se deshabilita la opción `Enable Application Insight` (por si acaso tiene costes)
+2. Idem anterior para el entorno `PRO` utilizando el mismo `App Service Plan` creado en el paso anterior.
+
+Si entramos en el recurso de una `Web Service`, se muestra la url para navegar hasta ella. Antes del despliegue, la web no tiene contenido y se muestra lo que aparece en la figura `Web App on DEV`
+
+![Web App on DEV](/lecture-notes/images/Web-App-on-DEV.PNG)
+
+Tras crear la Release Pipeline y realizar el deploy, se verá lo que muestra la figura `Web App on DEV. Deployment`
+
+![Web App on DEV. Deployment](/lecture-notes/images/Web-App-on-DEV-Deployment.PNG)
+
+### Crear la Release Pipeline
+
+En la pestaña `Pipelines - Releases` , se utiliza la opción `New Release Pipeline` . Tenemos que configurar la siguientes pestañas:
+
+- Pipeline
+- Tasks
+
+El resto las dejamos con los valores por defecto.
+
+En la pestaña Pipeline, seleccionamos la template `Azure App Service deployment`, que será la primera `task` del primer `Stage`, al que llamaremo `DEV`.
+
+![Azure app service deployment](/lecture-notes/images/Azure-app-service-deployment.png)
+
+Seleccionando el `Stage DEV`, nos movemos a la pestaña `tasks` y configuramos la tarea. Lo primero que hay que hacer es la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura `Configure an Azure service connection`.
+
+![Configure an Azure service connection](/lecture-notes/images/Configure-an-Azure-service-connection.PNG)
+
+Se pueden ver la configuración completa en la Figura `Release pipeline. Deploy AZ App Service`
+
+![Release pipeline. Deploy AZ App Service](/lecture-notes/images/Release-pipeline-Deploy-AZ-App-Service.PNG)
+
+En este punto podríamos hacer varias cosas:
+
+- Añadir más tasks dentro del Stage
+- Crear otro Stage distinto con otras tasks
+
+
+
+
+
+
+![New release pipeline](/lecture-notes/images/New-release-pipeline.PNG)
+
+
+### Ejecutar la Release Pipeline
+
+![Release pipeline. Add an artifact](/lecture-notes/images/Release-pipeline-Add-an-artifact.PNG)
+![Release pipeline. Add an artifact 2](/lecture-notes/images/Release-pipeline-Add-an-artifact-2.PNG)
+![Release pipeline. CD trigger](/lecture-notes/images/Release-pipeline-CD-trigger.PNG)
+![Release pipeline. Create release](/lecture-notes/images/Release-pipeline-Create-release.PNG)
+![Release pipeline. Create release 2](/lecture-notes/images/Release-pipeline-Create-release-2.PNG)
+
+![Release pipeline. Deployment](/lecture-notes/images/Release-pipeline-Deployment.PNG)
+![Release pipeline](/lecture-notes/images/Release-pipeline.PNG)
