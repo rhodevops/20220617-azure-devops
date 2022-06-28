@@ -565,8 +565,8 @@ steps:
 Notas importantes:
 
 - Por defecto, la rama por defecto de la pipeline es la `default branch` del repo.
-- Las pipelines creadas desde la pestaña `Pipelines` se crean en la `default branch`.
-- Para crear una pipeline en otra rama, hay que hacerlo desde la pestaña `Repos - Files`. La opción se llama `Set up build`.
+- Las pipelines creadas desde la pestaña `Pipelines` se crean en la `default branch`, salvo que en ventana correspodiente se cambie la opción a otra rama.
+- También se puede crear una pipeline desde la pestaña `Repos - Files`. La opción se llama `Set up build`.
 
 ## Crear una pipeline con código en Azure Devops
 
@@ -715,7 +715,80 @@ pool:
 
 Repositorio del laboratorio: `lab0803-pipelines`
 
-### Pipeline 1
+### Conceptos previos fundamentales
+
+#### Pipelines
+
+- Una `pipeline` es un conjunto de tareas ejecutadas en un flujo de trabajo.
+- Azure Devops ofrece dos tipos de pipelines.
+- La `Build Pipeline` se usa para generar `artifacts` fuera del código fuente.
+- La `Release Pipeline` consume los `artifacts` y lleva a cabo accciones de seguimientos dentro de un sistema `multi-staging`. 
+- Es una buena práctica establecer un enlace entre una  `Build Pipeline` y su correspondiente `Release Pipeline`.
+
+#### Jobs, agents y pools
+
+- Un `job` es una unidad de trabajo asignada a un agente o un servidor.
+- Un `agent` es un programa/contenedor/vm que ejecuta los trabajos de la pipeline.
+- Un `agent pool` (grupo de agentes) ayuda a organizar y gestionar los agentes instalados en diferentes entornos. Se pueden usar en pipelines de tipo `Release` y `Build`.
+- Un `deployment pool` es otro grupo de agentes. Solo se pueden usar en pipelines de tipo `Release`. Lo forman las máquinas objetivo del despliegue. Representa el entorno (DEV, TEST, UAT, PRO). 
+
+#### Stages, jobs, steps, tasks
+
+Constituyen la estructura de una pipeline "completa". 
+
+- Un `stage` es un escenario o etapa de ejecución. 
+- Un `job` es un trabajo dentro de un stage.
+- Los `steps` son secuencias lineales de operaciones dentro de un job. Varios tipos:
+  - `steps.task`
+  - `steps.script`
+  - `steps.bash`
+  - etc
+- Una `task` es un bloque de código de una pipeline. AZ Devops nos ofrece una catálago de tasks.
+
+Hay que aclarar que una pipeline simple no requiere de todos estos niveles. 
+
+Jerarquicamente:
+
+```yaml
+Pipeline
+  Stage A
+    Job 1
+      Step 1.1
+      Step 1.2
+      ...
+    Job 2
+      Step 2.1
+      Step 2.2
+      ...
+  Stage B
+  ...
+```
+
+Y con la sintaxis utilizada en el YAML:
+
+```yaml
+stages:
+  - stage: StageA
+    jobs:
+      - job: job1
+        steps:
+          - [ step ]
+          - [ step ]
+            [ ... ]
+      - job: job2
+        steps:
+          - [ step ]
+          - [ step ]
+            [ ... ]
+  - stage: StageB
+    [ ... ]
+```
+
+### Pipeline 01: trigger, variables y jobs
+
+Conceptos:
+
+- Un `trigger` es un disparador de la pipeline.
 
 Código:
 
@@ -754,11 +827,12 @@ jobs:
 
 Notas del código:
 
+- `$(name)` es una variable definida en `variables.name`
 - La propiedad `pipelines.name` define el número de ejecución de la pipeline
 - La variable `$(Rev:.r)` sirve como contador del número de ejecuciones de la pipeline.
 - El valor por defecto de `pipelines.name` es `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
 
-### Pipeline 2
+## Pipeline 02: parameters
 
 Código:
 
@@ -770,34 +844,165 @@ Código:
 
 name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
 
-trigger:
-  branches:
-    include:
-      - master
-    exclude:
-      - DEV
-
 pool:
-  vmImage: ubuntu-latest
+  vmImage: $(vmImage)
+
+parameters:
+  - name: vmImage
+    values:
+      - Ubuntu 18.04
+      - Ubuntu 20.04
 
 variables:
-  name: Roberto
+  - ${{ if eq(parameters.vmImage, 'Ubuntu 18.04') }}: 
+    - name: vmImage
+      value: ubuntu-18.04
+  - ${{ if eq(parameters.vmImage, 'Ubuntu 20.04') }}: 
+    - name: vmImage
+      value: ubuntu-20.04
+
 
 jobs:
-  - job: trabajo1
+  - job: myjob
+    displayName: My first job
+    dependsOn: A
+    workspace:
+      clean: outputs
     steps:
-      - script: echo Hello, $(name)
-        displayName: Say Hello
-
-  - job: trabajo2
+      - script: echo Mi primer trabajo
+  - job: A
     steps:
-      - script: echo Bye, $(name)
-        displayName: Say Bye
+      - script: echo Este es el trabajo A
 ```
 
 Notas del código:
 
-- La propiedad `pipelines.name` define el número de ejecución de la pipeline
-- La variable `$(Rev:.r)` sirve como contador del número de ejecuciones de la pipeline.
-- El valor por defecto de `pipelines.name` es `pipelines.name = $(Date:yyyyMMdd)$(Rev:.r)`
+- El agente del pool esta parametrizado (`parameters.vmImage`)
+- El valor de la variable `$(vmImage)` está condicionado al valor del parámetro `parameters.vmImage` que se le pasa a la pipeline.
+- La propiedad `jobs.job.dependsOn` se utiliza para indicar que un trabajo depende de otro. En la práctica se traduce en que uno se ejecuta antes que otro.
+
+## Pipeline 03: stages y steps
+
+Jerárquicamente, tenemos `stages`, `jobs`, `steps`.
+
+- Los `pipelines.stages` y los `jobs.job.steps` se ejecutan secuencialmente.
+
+Código:
+
+```yaml
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
+
+pool:
+  vmImage: ubuntu-20.04
+
+stages:
+  - stage: Stage1
+    displayName: "Stage 1: Job A depende de Job B"
+    jobs:
+      - job: jobA
+        displayName: Job A
+        dependsOn: jobB
+        steps:
+          - script: echo Este es el trabajo A
+      - job: jobB
+        displayName: Job B
+        steps:
+          - script: echo Este es el trabajo B
+          - bash: |
+              echo Hola mundo
+              echo Hola España
+          - pwsh: |
+              Write-Host Hola mundo
+              Write-Host Hola España
+  - stage: Stage2
+    displayName: "Stage 2: Job A, Job B independientes"
+    jobs:
+      - job: jobA
+        displayName: Job A
+        steps:
+          - script: echo Este es el trabajo A
+      - job: jobB
+        displayName: Job B
+        steps:
+          - script: echo Este es el trabajo B
+```
+
+## Pipeline 04: task
+
+Código:
+
+```yaml
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
+
+pool:
+  vmImage: ubuntu-20.04
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+### Pipeline n
+
+Código:
+
+```yaml
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: language
+    values:
+      - Spanish
+      - English
+
+variables:
+  - name: nombre
+    value: Roberto
+  - ${{ if eq(parameters.language, 'Spanish') }}:
+    - name: saludar
+      value: hola
+  - ${{ if eq(parameters.language, 'English') }}:
+    - name: saludar
+      value: hello
+
+steps:
+- script: echo $(saludar) $(nombre)!
+  displayName: 'Saludo'
+
+- script: |
+    echo Tu usuario es Us$(nombre)
+    echo Tu contraseña es $(ROBERTOPASSWORD)
+  displayName: 'Usuario y contraseña'
+```
+
+Notas del código:
+
+- El valor de la variable `variables.saludar` está condicionado al valor del parámetro `parameters.language` que se le pasa a la pipeline.
 
