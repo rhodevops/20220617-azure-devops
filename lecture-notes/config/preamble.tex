@@ -1,0 +1,33 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Definición de colores para usar en el
+%% metadata.yaml
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{Light}{HTML}{f8f8f8}
+\definecolor{Blue}{HTML}{33acff}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Resaltado del código en linea
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[most]{tcolorbox}
+
+\colorlet{LightLavender}{Lavender!40!}
+\tcbset{on line, 
+        boxsep=4pt, left=0pt,right=0pt,top=0pt,bottom=0pt,
+        colframe=white,colback=LightLavender,  
+        highlight math style={enhanced}
+        }
+
+% Guardamos la definición original para que nuestra definición no sea recursiva
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{
+    \tcbox{\oldtexttt{#1}} 
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Para generar texto de prueba
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{lipsum}

@@ -25,17 +25,13 @@ all: $(objects)
 $(output)/%.pdf: $(source)/%.md
 	pandoc \
 		-f markdown  $< \
-		--table-of-contents \
-		--number-sections \
-		-V urlcolor:red!70 \
-		--include-in-header config/inline_code.tex \
+		--template=config/template.tex \
+		--metadata-file=metadata.yaml \
+		--include-in-header config/preamble.tex \
 		--highlight-style config/pygments.theme \
 		--pdf-engine=xelatex \
 		-o $@
 
-# '-f markdown' specify input format(pandoc)
-# xelatex es necesario para que funcionen los 'task'
-# '--listings -H listings-setup.tex' utiliza el archivo listings-setup.tex para resaltar el código
 # '$<' represents the source file on which make is currently operating 
 # (makefile)
 # '$@' represents the target file on which make is currently operating 

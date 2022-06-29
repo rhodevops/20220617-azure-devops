@@ -1,10 +1,3 @@
----
-title: "Azure Devops de cero a experto"
-subtitle: "Por Alberto Picazo"
-author: Roberto Negro
-date: 17/06/2022
----
-
 # Diccionario de términos
 
 | término         | equivalentes | traducciones | 
@@ -281,13 +274,13 @@ Las branch policies sirven para proteger las ramas ante prácticas indeseadas.
 
 Para configurar una política en una rama, navegamos a `Repos - Branches` del repo deseado y, en la rama objetivo, desplegamos las opciones de tres puntos y seleccionamos `Branch Policies` 
 
-![DEV Branch Policies](./lecture-notes/images/DEV-branch-policies.PNG)
+![DEV Branch Policies](./images/DEV-branch-policies.PNG)
 
 Observar la nota bajo el título de la ventana emergente:
 
 > If any required policy is enabled, this branch cannot be deleted and **changes must be made via pull request**.
 
-Configuramos la rama `DEV` como se muestra en la figura `DEV Branch Policies`:
+Configuramos la rama `DEV` como se muestra en la Figura [DEV Branch Policies](fig):
 
 - Se requiere aprobación por una persona
 - Se permite autoaprobar
@@ -295,7 +288,7 @@ Configuramos la rama `DEV` como se muestra en la figura `DEV Branch Policies`:
 
 Al establecer políticas, cuando intentemos modificar un archivo de la rama `DEV` y hacer un commit del cambio, nos saltara un error. El error nos indicará que que los cambios deben hacerser vía pull requests.
 
-![Testing DEV Branch Policies](./lecture-notes/images/testing-DEV-branch-policies.PNG)
+![Testing DEV Branch Policies](./images/testing-DEV-branch-policies.PNG)
 
 En la siguiente sección se trata este caso.
 
@@ -314,7 +307,7 @@ El desarrollador crear una Pull Request:
 - Crear una rama de tipo feature basada en la rama `DEV`. 
 - Si la llamamos `feature/prueba-dev`, se crea una rama llamada `prueba-dev` dentro de la carpeta `feature`.
 
-![Feature branch based on DEV branch.](./lecture-notes/images/feature-branch-based-on-DEV-branch.PNG)
+![Feature branch based on DEV branch.](./images/feature-branch-based-on-DEV-branch.PNG)
 
 - Modificar un archivo del repo en la rama de tipo feature y crear una `Pull Request`. 
 - La `Pull Request` se pude crear en `Repos - Files` o en `Repos - Pull Request`. 
@@ -326,21 +319,21 @@ El desarrollador crear una Pull Request:
 El devops gestiona la Pull Request y hace el `Approve`:
 
 - Si se aprecia algún fallo de código, el devops puede poner un comentario al desarrollador.
-- Debido a las políticas de la rama `DEV`, no se puede hacer el `Complete` hasta que no se resuelva el comentario, como se muesta en la figura `Pull Request. Comments must be resolved` (Si que se puede hacer un `Aprove` aunque no tiene mucho sentido). 
+- Debido a las políticas de la rama `DEV`, no se puede hacer el `Complete` hasta que no se resuelva el comentario, como se muesta en la Figura [Pull Request. Comments must be resolved](fig) (Si que se puede hacer un `Aprove` aunque no tiene mucho sentido). 
 
-![Pull Request. Comments must be resolved](./lecture-notes/images/Pull-Request-Comments-must-be-resolved.PNG)
+![Pull Request. Comments must be resolved](./images/Pull-Request-Comments-must-be-resolved.PNG)
 
 - El desarrollador resuelvo el fallo detectado, hace el commit correspondinte y acude a la `Pull Request` para hacer un `Reply and Resolve` en el comentario que le ha puesto el devops. El devops se encarga de ir poniendo en `Closed` o `Resolved` el estado de los distintos comentarios.
 
-![Pull Request. Reply and resolve](./lecture-notes/images/Pull-Request-Reply-and-resolve.PNG)
+![Pull Request. Reply and resolve](./images/Pull-Request-Reply-and-resolve.PNG)
 
 - Resueltos los comentarios, el devops hace el `Approve` e inicia el `Conmplete`
 
-![Pull Request. Approve](./lecture-notes/images/Pull-Request-Approve.PNG)
+![Pull Request. Approve](./images/Pull-Request-Approve.PNG)
 
 - Hay varios tipos de `Complete`, en este caso se hace un `Merge (no fast forward)`. Hay varias opciones a completar, entre ellas la eliminación de la rama que se ha integrado (habitual en la integración de ramas feature)
 
-![Pull Request. Complete merge](./lecture-notes/images/Pull-Request-Complete-merge.PNG)
+![Pull Request. Complete merge](./images/Pull-Request-Complete-merge.PNG)
 
 ## Tags
 
@@ -355,7 +348,7 @@ Los tags sirven para etiquetar los distintos estados de un repositorio (commits)
 
 Los tags se gestionan desde la pestaña `Repos - Tags`. Sin embargo, es más cómodo agregar un tag basado en un commit desde la pestaña `Repos - Commits`, utilizando las opciones de tres puntos.
 
-![Tags based on commits](./lecture-notes/images/Tags-based-on-commits.PNG)
+![Tags based on commits](./images/Tags-based-on-commits.PNG)
 
 
 Desde `Repos - Tags`, se puede establecer el `compare` tag para establecerlo como referencia al utilizar la opción `Compare tags`.
@@ -373,9 +366,9 @@ Es bastante esclarecedor pensar en `clone` como un comando de git que crea una c
 
 Las figuras `Clon repository` y `Fork repository` muestran de manera gráfica la situación. 
 
-![Clone repository](./lecture-notes/images/Clone-repository.PNG)
+![Clone repository](./images/Clone-repository.PNG)
 
-![Fork repository](./lecture-notes/images/Fork-repository.PNG)
+![Fork repository](./images/Fork-repository.PNG)
 
 Es importante tener claro que:
 
@@ -417,7 +410,7 @@ Para hacer un `Pull Request` desde el Fork al Original:
 
 Situado en el repo del Fork, navegamos a la pestaña `Repos - Pull requests` y hacemos la peticion. En la imagen se muesta un ejemplo:
 
-![Forks. Pull request](./lecture-notes/images/Forks-Pull-request.png)
+![Forks. Pull request](./images/Forks-Pull-request.png)
 
 # Módulo pipelines CI
 
@@ -645,13 +638,13 @@ En el primer paso, se accede a la opción `Use the classic editor`.
 Uso de la vista clásica para generar YAML:
 
 - Crear una pipeline clasica.
-- Editarla y situarse en el `Agente Job` como se muesta en la figura `Pipeline classic editor. View yaml`.
+- Editarla y situarse en el `Agente Job` como se muesta en la Figura [Pipeline classic editor. View yaml](fig).
 - En la misma figura, se observa la opción `View YAML` que se puede utilizar.
 - Crear una nueva pipeline con el código YAML generado.
 - ¡Cuidado! Podemos tener problemas con las variables de entorno o conexiones a servidores.
 - Revisar el código una vez generado.
 
-![Pipeline classic editor. View yaml](/lecture-notes/images/Pipeline-classic-editor-View-yaml.png)
+![Pipeline classic editor. View yaml](./images/Pipeline-classic-editor-View-yaml.png)
 
 Otra opción, es exportar pipeline clásica a YAML:
 
@@ -678,7 +671,7 @@ Notas iniciales:
 
 En la pestaña `Pipelines - pipelines`, se crear una pipeline de la forma habitual, pero como no se puede hacer un commit directo a la rama `DEV`, es necesario crear una rama para hacer el commit, se llamará `azure-pipelines-add`.
 
-![New pipeline with pull request](./lecture-notes/images/New-pipeline-with-pull-request.PNG)
+![New pipeline with pull request](./images/New-pipeline-with-pull-request.PNG)
 
 
 ### Parte 2. Configurar una pipeline de CI
@@ -687,11 +680,11 @@ El objetivo es configurar una pipeline que se ejecutará cada vez que haya una p
 
 En la pestaña, `Files - Branches`, se configura una policie sobre la rama `DEV` de tipo `Build validation`.
 
-![DEV policies. Build validation](./lecture-notes/images/DEV-policies-Build-validation.PNG)
+![DEV policies. Build validation](./images/DEV-policies-Build-validation.PNG)
 
 Se dejan las opciones por defecto. Observar la opción `Triger.Automatic` que dispara la pipeline cada vez que la `source branch` se actualiza (CI).
 
-![CI pipeline. Configuration of buid validation](./lecture-notes/images/CI-pipeline-Configuration-of-buid-validation.PNG)
+![CI pipeline. Configuration of buid validation](./images/CI-pipeline-Configuration-of-buid-validation.PNG)
 
 ### Parte 3. Probar la pipeline de CI
 
@@ -701,12 +694,12 @@ Para probar la pipeline de CI:
 - Se hace un cambio/commit sobre la rama creada
 - Se abre una pull request a la rama DEV
 
-![New branch feature: pipeline-test](./lecture-notes/images/New-branch-Feature-pipeline-test.PNG)
+![New branch feature: pipeline-test](./images/New-branch-Feature-pipeline-test.PNG)
 )
 
-En la figura `Test a CI pipeline`, se observan los requerimientos que deben cumplirse para que se complete la pull request.
+En la Figura [Test a CI pipeline](fig), se observan los requerimientos que deben cumplirse para que se complete la pull request.
 
-![Test a CI pipeline](./lecture-notes/images/Test-a-CI-pipeline.PNG)
+![Test a CI pipeline](./images/Test-a-CI-pipeline.PNG)
 
 ## Configurar la ejecución de una pipeline tras un cambio en una rama
 
@@ -972,9 +965,9 @@ Vamos a aprender a hacer despliegues a traves de Release
 
 ## Crear la primera release
 
-### Crear repositorio
-
 Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`
+
+### Crear repositorio
 
 Se clona en AZ devops el repo [MicrosoftDocs/pipelines-dotnet-core.git](https://github.com/MicrosoftDocs/pipelines-dotnet-core.git)
 
@@ -1034,9 +1027,9 @@ Notas de las tasks:
 - `DotNetCoreCLI@2` para compilar, probar, empaquetar o publicar una aplicación `.NET CORE`
 - `PublishBuildArtifacts@1` para publicar artifacts
 
-Podemos navegar hasta el artefacto publicado utilizando el enlace situado en el resumen de la ejecución de la pipeline, como se muestra en la figura `Artifacts published`.
+Podemos navegar hasta el artefacto publicado utilizando el enlace situado en el resumen de la ejecución de la pipeline, como se muestra en la Figura [Artifacts published](fig).
 
-![Artifacts published](./lecture-notes/images/Artifacts-published.PNG)
+![Artifacts published](./images/Artifacts-published.PNG)
 
 ### Crear entornos en Azure
 
@@ -1054,13 +1047,13 @@ Seguir en Azure los siguientes pasos:
   - Se deshabilita la opción `Enable Application Insight` (por si acaso tiene costes)
 2. Idem anterior para el entorno `PRO` utilizando el mismo `App Service Plan` creado en el paso anterior.
 
-Si entramos en el recurso de una `Web Service`, se muestra la url para navegar hasta ella. Antes del despliegue, la web no tiene contenido y se muestra lo que aparece en la figura `Web App on DEV`
+Si entramos en el recurso de una `Web Service`, se muestra la url para navegar hasta ella. Antes del despliegue, la web no tiene contenido y se muestra lo que aparece en la figura [Web App on DEV](fig)
 
-![Web App on DEV](/lecture-notes/images/Web-App-on-DEV.PNG)
+![Web App on DEV](./images/Web-App-on-DEV.PNG)
 
-Tras crear la Release Pipeline y realizar el deploy, se verá lo que muestra la figura `Web App on DEV. Deployment`
+Tras crear la Release Pipeline y realizar el deploy, se verá lo que muestra la figura [Web App on DEV. Deployment](fig)
 
-![Web App on DEV. Deployment](/lecture-notes/images/Web-App-on-DEV-Deployment.PNG)
+![Web App on DEV. Deployment](./images/Web-App-on-DEV-Deployment.PNG)
 
 ### Crear y configurar una Release Pipeline
 
@@ -1070,7 +1063,7 @@ Hay que añadir los `Artifacts` y los `Stages` como se muestra en la Figura. El 
 
 #### Añadir un Stage
 
-![Release pipeline. Artifacts and stages.PNG](/lecture-notes/images/Release-pipeline-Artifacts-and-stages.PNG)
+![Release pipeline. Artifacts and stages.PNG](./images/Release-pipeline-Artifacts-and-stages.PNG)
 
 Hay dos pestañas fundamentales:
 
@@ -1081,15 +1074,15 @@ El resto de pestañas las vamos a dejar con los valores por defecto.
 
 En nuestra práctica, vamos a configurar un stage llamado `DEV` que va a constar de la tarea `Azure App Service deployment`; se utiliza la template del mismo nombre.
 
-![Azure app service deployment](/lecture-notes/images/Azure-app-service-deployment.png)
+![Azure app service deployment](./images/Azure-app-service-deployment.png)
 
-Para que la task funcione, hay que hacer la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura `Configure an Azure service connection`.
+Para que la task funcione, hay que hacer la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura [Configure an Azure service connection](fig).
 
-![Configure an Azure service connection](/lecture-notes/images/Configure-an-Azure-service-connection.PNG)
+![Configure an Azure service connection](./images/Configure-an-Azure-service-connection.PNG)
 
-Se puede ver la configuración completa de la task en la Figura `Release pipeline. Deploy AZ App Service`.
+Se puede ver la configuración completa de la task en la Figura [Release pipeline. Deploy AZ App Service](fig).
 
-![Release pipeline. Deploy AZ App Service](/lecture-notes/images/Release-pipeline-Deploy-AZ-App-Service.PNG)
+![Release pipeline. Deploy AZ App Service](./images/Release-pipeline-Deploy-AZ-App-Service.PNG)
 
 En este punto podríamos añadir más tasks dentro del mismo Stage.
 
@@ -1097,37 +1090,70 @@ En este punto podríamos añadir más tasks dentro del mismo Stage.
 
 Hay varios tipos de fuente que podemos utilizar para añadir un artifact. Se muestran en la Figura. Como nosotros hemos tenemos una `Build Pipeline` mediante a cual generamos el artefacto, seleccionamos la opción `Build`
 
-![Release pipeline. Add an artifact](/lecture-notes/images/Release-pipeline-Add-an-artifact.PNG)
+![Release pipeline. Add an artifact](./images/Release-pipeline-Add-an-artifact.PNG)
 
-En la Figura `Release pipeline. Add an artifact 2` se muesta la configuración del artefacto. Observar que AZ Devops detecta que ya hemos ejecutado la pipeline que genera el artefacto de nombre `drop`.
+En la Figura [Release pipeline. Add an artifact 2](fig) se muesta la configuración del artefacto. Observar que AZ Devops detecta que ya hemos ejecutado la pipeline que genera el artefacto de nombre `drop`.
 
-![Release pipeline. Add an artifact 2](/lecture-notes/images/Release-pipeline-Add-an-artifact-2.PNG)
+![Release pipeline. Add an artifact 2](./images/Release-pipeline-Add-an-artifact-2.PNG)
 
-En la Figura `Release pipeline. CD trigger` se muestra como activar el trigger de despliegue continuo (CD)
+En la Figura [Release pipeline. CD trigger](fig) se muestra como activar el trigger de despliegue continuo (CD)
 
-![Release pipeline. CD trigger](/lecture-notes/images/Release-pipeline-CD-trigger.PNG)
+![Release pipeline. CD trigger](./images/Release-pipeline-CD-trigger.PNG)
 
-El la siguiente Figura se muestra el resultado final de la `Release pipeline`, tras añadir los artifacts y stages deseados. Se finaliza haciendo un `save`. 
+El la Figura ['Release pipeline. Save'](fig) se muestra el resultado final de la `Release pipeline`, tras añadir los artifacts y stages deseados. Se finaliza haciendo un `save`. 
 
-![Release pipeline. Save](/lecture-notes/images/Release-pipeline-Save.PNG)
+![Release pipeline. Save](./images/Release-pipeline-Save.PNG)
 
 ### Crear una Release
 
 Tras guardar la Release Pipeline, hay que hacer un `Create Release`.
 
-En el caso de que hayamos cerrado ventanas, navegamos a `Pipelines - Releases`, buscamos la `Release Pipeline` que nos interesa y utilizamos la opción `Create release` (ver Figura)
+En el caso de que hayamos cerrado ventanas, navegamos a `Pipelines - Releases`, buscamos la `Release Pipeline` que nos interesa y utilizamos la opción `Create release`. Ver Figura ['Create release'](fig).
 
-![Create Release](/lecture-notes/images/Create-Release.PNG)
+![Create Release](./images/Create-Release.PNG)
 
-Hay varias formas para ejecutar el `Deploy`. En la Figura `Create Release. Deploy` se muestra una de ellas:
+Hay varias formas para ejecutar el `Deploy`. En la Figura ['Create Release. Deploy'](fig) se muestra una de ellas.
 
-![Create Release. Deploy](/lecture-notes/images/Create-Release-Deploy.PNG)
+![Create Release. Deploy](./images/Create-Release-Deploy.PNG)
 
-Por último, se indican las opciones que correspondan y se lanza la Release:
+Por último, se indican las opciones que correspondan y se lanza la Release. Ver Figura ['Create release. Deployment options'](fig).
 
-![Create Release. Deployment options](/lecture-notes/images/Create-Release-Deployment-options.PNG)
+![Create Release. Deployment options](./images/Create-Release-Deployment-options.PNG)
 
 ## Flujo completo de CI/CD
+
+Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`
+
+Para probar el flujo completo de CI/CD, lo único que tenemos que hacer es modificar un archivo del repositorio. Para que el cambio tenga un impacto a nivel gráfico sobre la App Service levantada en Azure, vamos a modicar el archivo `./Views/Home/Index.cshtml`
+
+```html
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Curso de Azure Devops</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+```
+
+donde hemos editado la etiqueta `h1`. 
+
+Implicaciones del cambio (en la rama `master`):
+
+- Se dispara la `Build Pipeline` <-- `trigger: master`
+- La pipeline anterior se llama `Azure-App-Service PUBLISH ARTIFACT` y genera un artefacto.
+- Se dipara la `Release Pipeline` <-- `CD trigger` every time a new build is available
+- La pipeline anterior se llama `01 - Azure-App-Service DEPLOYMENT`
+
+Notas:
+
+- No se  que configuración utilicé, que la `Build Pipeline` también se disparaba con independencia de que estuviera o no estuviera el `trigger: master`.
+
+Posibles errores:
+
+> 2022-06-29T15:41:04.2484470Z ##[error]Error: No package found with specified pattern: D:\a\r1\a\**\*.zip<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.
+
 
 
 

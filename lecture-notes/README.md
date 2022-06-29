@@ -4,6 +4,9 @@
     1. GNU make
     2. Pandoc
 - Utiliza el motor `xeLatex`.
-- Se edita el archivo `src/in.md`. 
-- El resaltado del código se configura en `config`.
+- Hay que editar los archivos `src/in.md` y `metadata.yaml`
+
+Se requiere instalar los siguientes paquetes de LaTeX:
+
+- 
 
