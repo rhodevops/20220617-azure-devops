@@ -299,7 +299,7 @@ Repositorio del laboratorio: `lab0701`
 Conceptos previos:
 
 - Una `Pull Request` (`Merge Request` en GitLab) es una solicitud, p.e. de un desarrollador, para que el código que ha creado en su rama se integre en otra.
-- Normalmente la rama del desarrollad[](laboratorio:%20%60lab0701%60)or es de tipo `feature` y muere tras integrarse en una rama de mayor nivel como puede ser `DEV`.
+- Normalmente la rama del desarrollador es de tipo `feature` y muere tras integrarse en una rama de mayor nivel como puede ser `DEV`.
 - La `Pull Request` normalmente es resuelta por una persona distinta a la persona que ha hecho la solicitud.
 
 El desarrollador crear una Pull Request:
@@ -307,7 +307,7 @@ El desarrollador crear una Pull Request:
 - Crear una rama de tipo feature basada en la rama `DEV`. 
 - Si la llamamos `feature/prueba-dev`, se crea una rama llamada `prueba-dev` dentro de la carpeta `feature`.
 
-![Feature branch based on DEV branch.](./images/feature-branch-based-on-DEV-branch.PNG)
+![Feature branch based on DEV branch](./images/feature-branch-based-on-DEV-branch.PNG)
 
 - Modificar un archivo del repo en la rama de tipo feature y crear una `Pull Request`. 
 - La `Pull Request` se pude crear en `Repos - Files` o en `Repos - Pull Request`. 
@@ -1160,7 +1160,7 @@ Notas:
 
 Posibles errores:
 
-> 2022-06-29T15:41:04.2484470Z ##[error]Error: No package found with specified pattern: D:\a\r1\a\**\*.zip<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.
+> Error: No package found with specified pattern: `D:\a\r1\a\**\*.zip` Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.
 
 ### Editar la Release Pipeline añadiendo el stage PRO
 
