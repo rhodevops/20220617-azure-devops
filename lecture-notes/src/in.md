@@ -1199,7 +1199,7 @@ Por último se navega a los entornos de `DEV` y `PRO` (urls en Azure), para comp
 
 Ventajas de este flujo de trabajo:
 
-- Es el mismo artefacto el que fluye de un entorno a otro.
+- Es el mismo artefacto (aplicación) el que fluye de un entorno a otro.
 - La aplicación está igual en todos los entornos.
 - Solo cambia la configuración y los secretos.
 
@@ -1208,7 +1208,75 @@ Líneas de I+D:
 - `Pre-deployment conditions` de un Stage
 - `Post-deployment conditions` de un Stage
 
-## 
+## Variables de entorno
+
+Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`.
+
+Como ya se ha dicho, en el flujo de trabajo, es el mismo artefacto (código de la aplicación) el que se despliega a `DEV` y `PRO`, sin embargo, hay configuraciones y valores de variables y secretos que pueden cambiar entre entornos. Para ello se utilizan las variables de entorno.
+
+### Crear grupo de variables
+
+En la pestaña `Pipelines - Library`, creamos dos grupos de variables, uno para cada entorno de despliegue.
+
+- `Azure-App-Service-DEV`
+- `Azure-App-Service-PRO`
+
+Ambos grupos van a tener las mismas variables (utiliza el clonado, por rapidez) pero con distintos valores. Para hacer pruebas, se crean las variables `connectionString` y `reintentos`. Para utilizarlas en la Release Pipeline, se utilizará la sintaxis habitual, es decir se utilizará `$(connectionString)` y `$(reintentos)` respectivamente.
+
+### Modificar el archivo de configuración del repositorio
+
+Investigar este paso. ¿Qué repercusiones tiene?
+
+- Modificamos el archivo de configuración de nuestra aplicación editando el archivo `appsettings.json`
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionString": "",
+  "Reintentos": 1
+}
+```
+
+### Configurar variables en una Release Pipeline
+
+En una `Release Pipeline` se pueden utilizar los siguientes tipos de variables:
+
+- `Pipeline variables` Específicas para la pipeline.
+- Variables de los `Variable groups` El grupo suele ser para un entorno específico (DEV, PRO, etc).
+- `Predefined variables` Consultar la documentación oficial.
+
+En la Figura ['Release pipeline. Variables'](fig) se observa el tipo de variables que se pueden utilizar. Las `Pipeline variables` se definen construyendo/editando la Release Pipeline. 
+
+![Release pipeline. Variables](./images/Release-pipeline-Variables.png)
+
+Para utilizar las variables de un grupo (definidas en la `Library`) hay que hacer un `Link variable group` como se muestra en la la Figura ['Release pipeline. Link variable group'](fig). La idea es que el grupo de variables creada para el entorno `DEV` se vincula con el Stage `DEV` y lo mismo para cada uno de los entornos/stages.
+
+![Release pipeline. Link variable group](./images/Release-pipeline-Link-variable-group.PNG)
+
+### Utilizar las variables en una Release Pipeline
+
+Paso para utilizar las variables de los grupos vinculados:
+
+- Se edita la Release Pipeline.
+- Los siguiente pasos de hacen para cada stage/entorno.
+- Nos situamos en la pestaña `Tasks`.
+- Seleccionamos el `task` y el `stage` deseados.
+- En este caso la task es una `Deploy Azure App Service`
+- Navegamos a la opción `App settings`.
+- Se utiliza la opción tres puntos para introducir las variables como clave-valor.
+- Ver la Figura ['Release pipeline. Task App settings'](fig)
+
+![Release pipeline. Task App settings](/images/Release-pipeline-Task-App-settings.PNG)
+
+Tras hacer el deployment en cada uno de los stages/entornos, se puede navegar al recurso de Azure correspondiente a cada entorno (`DEV`, `PRO`) y en la pestaña `Settings - Configuration` del recurso comprobar los valores de las variables. Serán distintos en cada uno de los recursos/entornos porque así hemos querido que sea. Ver la Figura ['Azure app service. Settings configuration in Azure'](fig)
+
+![Azure app service. Settings configuration in Azure](/images/Azure-app-service-Settings-configuration-in-Azure.png)
+
 
 
 
