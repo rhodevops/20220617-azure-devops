@@ -1271,13 +1271,37 @@ Paso para utilizar las variables de los grupos vinculados:
 - Se utiliza la opción tres puntos para introducir las variables como clave-valor.
 - Ver la Figura ['Release pipeline. Task App settings'](fig)
 
-![Release pipeline. Task App settings](/images/Release-pipeline-Task-App-settings.PNG)
+![Release pipeline. Task App settings](./images/Release-pipeline-Task-App-settings.PNG)
 
 Tras hacer el deployment en cada uno de los stages/entornos, se puede navegar al recurso de Azure correspondiente a cada entorno (`DEV`, `PRO`) y en la pestaña `Settings - Configuration` del recurso comprobar los valores de las variables. Serán distintos en cada uno de los recursos/entornos porque así hemos querido que sea. Ver la Figura ['Azure app service. Settings configuration in Azure'](fig)
 
-![Azure app service. Settings configuration in Azure](/images/Azure-app-service-Settings-configuration-in-Azure.png)
+![Azure app service. Settings configuration in Azure](./images/Azure-app-service-Settings-configuration-in-Azure.png)
 
 
+## Rollback
+
+Un `rollback` (retroceso) es un `deploy` de una release antigua.
+
+Tiene que existir un buen motivo para hacerlo y hay que analizar bien lo que se está haciendo porque puede implicar cambios no deseado en el entorno sobre el que se hace.
+
+Las figuras siguientes muestran lo que hemos hecho en nuestra práctica.
+
+La Figura ['Releases before the rollback'](fig) muestra el estado de las releases antes del rollback. Observar que:
+
+- El último despliegue (Currently deployed) a `DEV` es el de la `Release 18`.
+- El último despliegue (Currently deployed) a `PRO` es el de la `Release 17`.
+- Ha habido despliegues (Deployed) a `DEV` en las releases `16` y `18`.
+- Ha habido despliegues (Deployed) a `DEV` en las releases `15` y `17`.
+
+![Releases before the rollback](./images/Releases-before-the-rollback.png)
+
+Lo que vamos a hacer, partiendo del estado mostrado, es el `Deploy` a `DEV` de la `Release 16` (To be deploy) , lo que implica `Rolling back changes` (reversion de cambios), como nos indica el aviso que se muestra en la Figura ['Deploy release. Rollback'](fig).
+
+![Deploy release. Rollback](./images/Deploy-release-Rollback.png)
+
+La Figura ['Releases after the rollback'](fig) muestras el estado de las releases tras el rollback.
+
+![Releases after the rollback](./images/Releases-after-the-Rollback.png)
 
 
 
