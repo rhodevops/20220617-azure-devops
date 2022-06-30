@@ -280,7 +280,7 @@ Observar la nota bajo el título de la ventana emergente:
 
 > If any required policy is enabled, this branch cannot be deleted and **changes must be made via pull request**.
 
-Configuramos la rama `DEV` como se muestra en la Figura [DEV Branch Policies](fig):
+Configuramos la rama `DEV` como se muestra en la Figura ['DEV Branch Policies'](fig):
 
 - Se requiere aprobación por una persona
 - Se permite autoaprobar
@@ -319,7 +319,7 @@ El desarrollador crear una Pull Request:
 El devops gestiona la Pull Request y hace el `Approve`:
 
 - Si se aprecia algún fallo de código, el devops puede poner un comentario al desarrollador.
-- Debido a las políticas de la rama `DEV`, no se puede hacer el `Complete` hasta que no se resuelva el comentario, como se muesta en la Figura [Pull Request. Comments must be resolved](fig) (Si que se puede hacer un `Aprove` aunque no tiene mucho sentido). 
+- Debido a las políticas de la rama `DEV`, no se puede hacer el `Complete` hasta que no se resuelva el comentario, como se muesta en la Figura ['Pull Request. Comments must be resolved'](fig) (Si que se puede hacer un `Aprove` aunque no tiene mucho sentido). 
 
 ![Pull Request. Comments must be resolved](./images/Pull-Request-Comments-must-be-resolved.PNG)
 
@@ -364,7 +364,7 @@ Es importante distinguir los términos `clone` (proceso) y `fork` (concepto).
 
 Es bastante esclarecedor pensar en `clone` como un comando de git que crea una copia de un repositorio y pensar en `fork` como la práctica que permite, bien hacer una bifurcación independiente de un proyecto, o bien iniciar una colaboración en un proyecto (si tengo permisos) realizando propuestas a través de pull requests.
 
-Las figuras `Clon repository` y `Fork repository` muestran de manera gráfica la situación. 
+Las figuras ['Clon repository'](fig) y ['Fork repository'](fig) muestran de manera gráfica la situación. 
 
 ![Clone repository](./images/Clone-repository.PNG)
 
@@ -638,7 +638,7 @@ En el primer paso, se accede a la opción `Use the classic editor`.
 Uso de la vista clásica para generar YAML:
 
 - Crear una pipeline clasica.
-- Editarla y situarse en el `Agente Job` como se muesta en la Figura [Pipeline classic editor. View yaml](fig).
+- Editarla y situarse en el `Agente Job` como se muesta en la Figura ['Pipeline classic editor. View yaml'](fig).
 - En la misma figura, se observa la opción `View YAML` que se puede utilizar.
 - Crear una nueva pipeline con el código YAML generado.
 - ¡Cuidado! Podemos tener problemas con las variables de entorno o conexiones a servidores.
@@ -697,7 +697,7 @@ Para probar la pipeline de CI:
 ![New branch feature: pipeline-test](./images/New-branch-Feature-pipeline-test.PNG)
 )
 
-En la Figura [Test a CI pipeline](fig), se observan los requerimientos que deben cumplirse para que se complete la pull request.
+En la Figura ['Test a CI pipeline'](fig), se observan los requerimientos que deben cumplirse para que se complete la pull request.
 
 ![Test a CI pipeline](./images/Test-a-CI-pipeline.PNG)
 
@@ -959,13 +959,11 @@ En 2022 se recomienda usar `PublishPipelineArtifact@1` y `DownloadPipelineArtifa
 
 # Módulo pipelines CD
 
-## Introducción
+Vamos a hacer un despliegue de una aplicación `.NET CORE` a una `Azure Web Service`.
 
-Vamos a aprender a hacer despliegues a traves de Release
+## Crear una release
 
-## Crear la primera release
-
-Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`
+Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`.
 
 ### Crear repositorio
 
@@ -1027,11 +1025,11 @@ Notas de las tasks:
 - `DotNetCoreCLI@2` para compilar, probar, empaquetar o publicar una aplicación `.NET CORE`
 - `PublishBuildArtifacts@1` para publicar artifacts
 
-Podemos navegar hasta el artefacto publicado utilizando el enlace situado en el resumen de la ejecución de la pipeline, como se muestra en la Figura [Artifacts published](fig).
+Podemos navegar hasta el artefacto publicado utilizando el enlace situado en el resumen de la ejecución de la pipeline, como se muestra en la Figura ['Artifacts published'](fig).
 
 ![Artifacts published](./images/Artifacts-published.PNG)
 
-### Crear entornos en Azure
+### Crear entornos DEV y PRO en Azure
 
 Se supone que se puede hace gratis (hasta 10 aplicaciones). Vamos a crear dos recursos de  `Web App`, uno para el entorno `DEV` y otro para `PRO`.
 
@@ -1047,40 +1045,49 @@ Seguir en Azure los siguientes pasos:
   - Se deshabilita la opción `Enable Application Insight` (por si acaso tiene costes)
 2. Idem anterior para el entorno `PRO` utilizando el mismo `App Service Plan` creado en el paso anterior.
 
-Si entramos en el recurso de una `Web Service`, se muestra la url para navegar hasta ella. Antes del despliegue, la web no tiene contenido y se muestra lo que aparece en la figura [Web App on DEV](fig)
+Si entramos en el recurso de una `Web Service`, se muestra la url para navegar hasta ella. Antes del despliegue, la web no tiene contenido y se muestra lo que aparece en la Figura ['Web App on DEV'](fig)
 
 ![Web App on DEV](./images/Web-App-on-DEV.PNG)
 
-Tras crear la Release Pipeline y realizar el deploy, se verá lo que muestra la figura [Web App on DEV. Deployment](fig)
+Tras crear la Release Pipeline y realizar el deploy, se verá lo que muestra la Figura ['Web App on DEV. Deployment'](fig)
 
 ![Web App on DEV. Deployment](./images/Web-App-on-DEV-Deployment.PNG)
 
-### Crear y configurar una Release Pipeline
+### Construir la Release Pipeline con el stage DEV
+
+Es importante distinguir y no confundir los dos conceptos siguientes:
+
+- `Release Pipeline` Es la pipeline que conduce la release. Se crea, o más bien se construye, "una sola vez". La opción en AZ Devops se llama `New Release Pipeline`.
+- `Release` Es la release en si misma. Se crea cada vez que se quiere hacer un despiegue. La opción en AZ Devops se llama `Create (new) release` . Tras crear una Release se suele hace un `Deploy` (`Deploy Stage` o `Deploy multiple`)
 
 En la pestaña `Pipelines - Releases` , se utiliza la opción `New Release Pipeline` . 
 
-Hay que añadir los `Artifacts` y los `Stages` como se muestra en la Figura. El esquema se muesta en la pestaña `Pìpeline`. Como mínimo la Release Pipeline debe contener un artefacto y un stage.
+Una `Release Pipeline` consta de `Artifacts` y `Stages`. Como mínimo la Release Pipeline debe contener un artefacto y un stage.
 
-#### Añadir un Stage
+![Release pipeline. Artifacts and stages](./images/Release-pipeline-Artifacts-and-stages.PNG)
 
-![Release pipeline. Artifacts and stages.PNG](./images/Release-pipeline-Artifacts-and-stages.PNG)
+Hay dos pestañas fundamentales. La primera es la pestaña `Pipeline`, que muestra el esquema gráfico de la pipeline, ver la Figura ['Release pipeline. Artifacts and stages'](fig). También permite el acceso mediante iconos a las siguientes opciones:
 
-Hay dos pestañas fundamentales:
+- Artifacts - `Schedule release trigger`
+- (For each) `Artifact - Continuous deployment trigger`
+- (For each) `Stage - Pre-deployment conditions`
+- (For each) `Stage - Post-deployment conditions`
 
-- `Pipeline` Se muestra el esquema gráfico de la pipeline
-- `Tasks` Se configuran las tasks del Stage seleccionado
+Y la segunda es la pestaña `Tasks`, donde se configuran las tasks de los distintos Stages.
 
 El resto de pestañas las vamos a dejar con los valores por defecto.
 
-En nuestra práctica, vamos a configurar un stage llamado `DEV` que va a constar de la tarea `Azure App Service deployment`; se utiliza la template del mismo nombre.
+#### Añadir el Stage DEV
+
+En nuestra práctica, vamos a configurar un stage llamado `DEV` (Trigger: After Release) que va a constar de la tarea `Azure App Service deployment`; se utiliza la template del mismo nombre.
 
 ![Azure app service deployment](./images/Azure-app-service-deployment.png)
 
-Para que la task funcione, hay que hacer la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura [Configure an Azure service connection](fig).
+Para que la task funcione, hay que hacer la conexión a Azure mediante un `Azure service connection` como se muestra en la Figura ['Configure an Azure service connection'](fig). Una vez hecho, usaremos la misma conexión si creamos un nuevo Stage.
 
 ![Configure an Azure service connection](./images/Configure-an-Azure-service-connection.PNG)
 
-Se puede ver la configuración completa de la task en la Figura [Release pipeline. Deploy AZ App Service](fig).
+Se puede ver la configuración completa de la task en la Figura ['Release pipeline. Deploy AZ App Service'](fig).
 
 ![Release pipeline. Deploy AZ App Service](./images/Release-pipeline-Deploy-AZ-App-Service.PNG)
 
@@ -1088,15 +1095,15 @@ En este punto podríamos añadir más tasks dentro del mismo Stage.
 
 #### Añadir un artifact
 
-Hay varios tipos de fuente que podemos utilizar para añadir un artifact. Se muestran en la Figura. Como nosotros hemos tenemos una `Build Pipeline` mediante a cual generamos el artefacto, seleccionamos la opción `Build`
+Hay varios tipos de fuente que podemos utilizar para añadir un artifact. Se muestran en la Figura ['Release pipeline. Add an artifact'](fig) . Como nosotros tenemos una `Build Pipeline` mediante la cual generamos el artefacto, seleccionamos la opción `Build`
 
 ![Release pipeline. Add an artifact](./images/Release-pipeline-Add-an-artifact.PNG)
 
-En la Figura [Release pipeline. Add an artifact 2](fig) se muesta la configuración del artefacto. Observar que AZ Devops detecta que ya hemos ejecutado la pipeline que genera el artefacto de nombre `drop`.
+En la Figura ['Release pipeline. Add an artifact 2'](fig) se muesta la configuración del artefacto. Observar que AZ Devops detecta que ya hemos ejecutado la pipeline que genera el artefacto de nombre `drop`.
 
 ![Release pipeline. Add an artifact 2](./images/Release-pipeline-Add-an-artifact-2.PNG)
 
-En la Figura [Release pipeline. CD trigger](fig) se muestra como activar el trigger de despliegue continuo (CD)
+En la Figura ['Release pipeline. CD trigger'](fig) se muestra como activar el trigger de despliegue continuo (CD)
 
 ![Release pipeline. CD trigger](./images/Release-pipeline-CD-trigger.PNG)
 
@@ -1104,7 +1111,7 @@ El la Figura ['Release pipeline. Save'](fig) se muestra el resultado final de la
 
 ![Release pipeline. Save](./images/Release-pipeline-Save.PNG)
 
-### Crear una Release
+### Crear la Release y hacer el deploy
 
 Tras guardar la Release Pipeline, hay que hacer un `Create Release`.
 
@@ -1120,11 +1127,9 @@ Por último, se indican las opciones que correspondan y se lanza la Release. Ver
 
 ![Create Release. Deployment options](./images/Create-Release-Deployment-options.PNG)
 
-## Flujo completo de CI/CD
+### Probar el flujo completo de CI/CD
 
-Repositorio del laboratorio: `lab0901-pipelines-dotnet-core`
-
-Para probar el flujo completo de CI/CD, lo único que tenemos que hacer es modificar un archivo del repositorio. Para que el cambio tenga un impacto a nivel gráfico sobre la App Service levantada en Azure, vamos a modicar el archivo `./Views/Home/Index.cshtml`
+Para probar el flujo completo de CI/CD, lo único que tenemos que hacer es modificar un archivo del repositorio. Para que el cambio tenga un impacto a nivel gráfico sobre la App Service levantada en Azure, vamos a modicar el archivo `./Views/Home/Index.cshtml` editando p.e. la etiqueta `h1`. 
 
 ```html
 @{
@@ -1137,14 +1142,17 @@ Para probar el flujo completo de CI/CD, lo único que tenemos que hacer es modif
 </div>
 ```
 
-donde hemos editado la etiqueta `h1`. 
-
-Implicaciones del cambio (en la rama `master`):
+Flujo tras el cambio en la rama `master`:
 
 - Se dispara la `Build Pipeline` <-- `trigger: master`
-- La pipeline anterior se llama `Azure-App-Service PUBLISH ARTIFACT` y genera un artefacto.
-- Se dipara la `Release Pipeline` <-- `CD trigger` every time a new build is available
-- La pipeline anterior se llama `01 - Azure-App-Service DEPLOYMENT`
+- Se dipara la `Release` 
+  - Artifact <-- `CD trigger: enabled` (every time a new build is available)
+  - Se ejecuta el Stage `DEV` <-- `Trigger: After release`
+
+Nombres de las pipelines:
+
+- Build pipeline: `Azure-App-Service PUBLISH ARTIFACT` genera un artefacto
+- Release pipeline: `01 - Azure-App-Service DEPLOYMENT`
 
 Notas:
 
@@ -1153,6 +1161,56 @@ Notas:
 Posibles errores:
 
 > 2022-06-29T15:41:04.2484470Z ##[error]Error: No package found with specified pattern: D:\a\r1\a\**\*.zip<br/>Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.
+
+### Editar la Release Pipeline añadiendo el stage PRO
+
+Añadimos un nuevo stage, el de `PRO` a la `Release Pipeline`. En este caso se selcciona un `Trigger: Manual only` como se observa en la Figura ['Release pipeline. New Stage. Manual only'](fig).
+
+![Release pipeline. New Stage. Manual only](./images/Release-pipeline-New-Stage-Manual-only.PNG)
+
+En la Figura ['Release pipeline. New Stage. Manual only vs After release'](fig) se observa que si el trigger es de tipo `After release`, entonces se refleja gráficamente en el esquemas de la pipeline mediante una línea que conecta el Stage correspondiente con la caja de `Artifacts`
+
+![Release pipeline. New Stage. Manual only vs After release](./images/Release-pipeline-New-Stage-Manual-only-vs-After-release.PNG)
+
+### Crear una nueva Release (de la misma Release Pipeline)
+
+La Release Pipile que hemos construído, tiene dos Stages:
+
+- `DEV` <-- `Trigger: After release`
+- `PRO` <-- `Trigger: Manual only`
+
+Creamos una nueva release con la opción `Create release` y observamos que solo se ejecuta el Stage `DEV` (el `deploy` del Stage `PRO` se tiene que ejecutar a mano).
+
+Como se observa en la Figura ['Create Release. Trigger Change'](fig), existe la posibilidad, en el momento de lanzar la Release, de modificar el Trigger del Stage `DEV` y cambiarlo a `Manual`.
+
+![Create Release. Trigger Change](./images/Create-Release-Trigger-Change.PNG)
+
+Tras crear la Release, la situación es la de la Figura ['Azure app service deployment. Releases'](fig), donde se observa que solo se ha hecho el despliegue en el entorno `DEV`.
+
+![Azure app service deployment. Releases](./images/Azure-app-service-deployment-Releases.png)
+
+### Hacer el deploy del stage PRO
+
+Se navega a `Pipelines - Releases`, se busca la Release que nos interesa y se navega a los sitios desde los cuales se puede hacer el deploy de un Stage en particular, en este caso del Stage `PRO`. Es bastante intuitivo encontrar el boton `Deploy`.
+
+Por último se navega a los entornos de `DEV` y `PRO` (urls en Azure), para comprobar que se ha desplegado correctament.
+
+### Algunas conclusiones y propuestas de I+D
+
+Ventajas de este flujo de trabajo:
+
+- Es el mismo artefacto el que fluye de un entorno a otro.
+- La aplicación está igual en todos los entornos.
+- Solo cambia la configuración y los secretos.
+
+Líneas de I+D:
+
+- `Pre-deployment conditions` de un Stage
+- `Post-deployment conditions` de un Stage
+
+## 
+
+
 
 
 
