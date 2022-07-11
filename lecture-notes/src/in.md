@@ -180,7 +180,52 @@ Escribir la documentación general del proyecto.
 
 # Módulo Boards
 
-[TODO]
+## ¿Qué es AZ Boards?
+
+Con `AZ Boards` proporciona un sistema de gestion de los proyectos. 
+
+Características_
+
+- Soporte nativo para Scrum y Kanban.
+- Tipos de procesos: `agile`, `basic`, `scrum`, `CMMI`.
+- Permite colaboración dentro del equipo.
+- Trabajo en Sprints
+
+## Gestión de usuarios
+
+### Invitar a usuarios
+
+En `Organization Settings`, en la pestaña `Users`, existe la opción `Add Users` para añadir nuevos usuarios a los proyectos de la la organización.
+
+También se puede utilizar la opción `Invite`, en la pestaña `Overview - Summary`, para añadir usuarios.
+
+### Seguridad de usuarios
+
+En `Organization Settings`, en la pestaña `Users`, se puede utilizar la opción `Manage user`del desplegable de tres puntos de un usuario para gestionar sus permisos y niveles de acceso.
+
+## Tipos de procesos
+
+- `agile` metodologías ágiles
+- `basic` modelo más simple
+- `scrum` metodología scrum
+- `CMMI` métodos de proyecto más formales (marc mejora procesos, registro auditable de decisiones) 
+
+## Pendiente
+
+[PENDIENTE](todo)
+
+Falta por incluir los apuntes relativos a:
+
+- Kanban en Azure Boards
+- Configurar capacidad del equipo
+- Configurar columnas en los paneles
+- Configuración de paneles
+- Filtrando tareas con Querys
+- Configura tus equipos
+- Configura Dashboards para ver metricas sobre Azure Boards
+- Practica
+
+Si es necesario, consultar los videos correspondientes. La práctica parece interesante.
 
 # Modulo Repos
 
@@ -1302,6 +1347,149 @@ Lo que vamos a hacer, partiendo del estado mostrado, es el `Deploy` a `DEV` de l
 La Figura ['Releases after the rollback'](fig) muestras el estado de las releases tras el rollback.
 
 ![Releases after the rollback](./images/Releases-after-the-Rollback.png)
+
+# Estrategias de despliegues
+
+## Tipos de estrategias de despliegues
+
+- Bule-green deployments
+- Canary releases
+- Dark launching
+- A/B testing
+- Progressive exposure or ring-based deployment
+- Feature toggles
+
+## Blue-Green
+
+Consultar [¿Qué es la implementación azul-verde?](https://www.redhat.com/es/topics/devops/what-is-blue-green-deployment)
+
+Una implementación blue-green es un modelo de lanzamiento de aplicaciones que transfiere poco a poco el tráfico de usuarios de cierta versión anterior de una aplicación o microservicio a una versión nueva casi idéntica, cuando ambas se encuentran en producción.
+
+Es una técnica que reduce el riesgo y el tiempo de inactividad:
+
+- `Entorno azul` identifica la versión antigua
+- `Entorno verde` identifica la versión nueva
+
+## Feature togles o feature flags
+
+Consultar [Beneficios De Las Feature Toggles O Feature Flags](https://apiumhub.com/es/tech-blog-barcelona/beneficios-feature-toggles-feature-flags/) y [Continuously deliver with dark launches and feature toggles](https://www.ibm.com/garage/method/practices/run/practice_dark_launch_feature_toggles/)
+
+Las `feature toggles` o `feature flags` te permiten conmutar una funcionalidad de on a off en cualquier momento, incluso tras haber desplegado tu código. Permiten a los equipos de desarrollo modificar el comportamiento de un sistema sin cambiar el código. 
+
+Las feature toggles son principalmente variables que se usan dentro de declaraciones condicionales. Se usa para añadir nuevas funcionalidades a una aplicación que pueden ser activadas/desactivadas.
+
+Ventajas:
+
+- Invisibilidad (hasta que se activa)
+- Velocidad (CI/CD)
+- A/B testing 
+- Flexibilidad
+- Seguridad
+- Reducción del riesgo
+- Actualizar las funcionalidades que ya están en vivo
+
+Tipos:
+
+- `Release togle` Poner en cuarentena una funcionalidad inacabada.
+- `Ops togle` Funcionalidad con impacto desconocido en el PRO.
+- `Experiment togle` Permite ejecutar un A/B testing
+- `Permissioning togle` Cambiar funcionalidades a ciertos usuarios.
+
+## Canary releases
+
+Consultar [¿Qué es un lanzamiento tipo canary?](https://www.jetbrains.com/es-es/teamcity/ci-cd-guide/concepts/canary-release/)
+
+Una `canary release `es una estrategia de implementación destinada a lanzar los cambios iniciales a un pequeño subgrupo de usuarios. Es una forma de identificar problemas potenciales lo antes posible sin exponer a todos los usuarios finales, del mismo modo que el canario que acompañaba a los mineros en las minas de carbón, ante la exposición a gases tóxicos, moría antes que un minero, dándole tiempo a este a escapar.
+
+Es una combinación de:
+
+- `Feature toggles` activar/desactivar la nueva funcionalidad.
+- `Traffic routing` enrutar trafico (con la nueva funcinalidad) a ciertos sitios.
+- `Despliegues en slots`
+
+La herramienta `Traffic Manager` de Azure se utiliza para dirgir el tráfico de carga. Se trata de un equilibrador de carga de tráfico basado en DNS. Permite distribuir el tráfico a los servicios de manera óptima y proporcionando alta disponibilidad y capacidad de respuesta. Se configura por prioridad, ponderado, rendimiento, geográfico, multivalor, subred.
+
+Consultar [Nested Traffic Manager profiles](https://docs.microsoft.com/en-us/azure/traffic-manager/traffic-manager-nested-profiles).
+
+Consultar:
+
+- [¿Qué es un ''entry point'' y un ''end point''?](https://es.stackoverflow.com/questions/51758/qu%C3%A9-es-un-entry-point-y-un-end-point).
+- [¿Me podrían ayudar a diferenciar que es un endpoint y una API?](https://es.stackoverflow.com/questions/343196/me-podr%c3%adan-ayudar-a-diferenciar-que-es-un-endpoint-y-una-api?noredirect=1&lq=1)
+
+## Dark launching
+
+Comnsultar [What Is A Dark Launch?](https://devcycle.com/solutions/dark-launch)
+
+Es muy parecido a la `Canary Release`. La diferencia es que aquí estas buscando la respuesta de los usuarios a las nuevas funciones de su interfaz, en lugar de probar el rendimiento del backend.
+
+Se denomina oscuro porque los usuarios de prueba no son conscientes de que son usuarios de prueba.
+
+## A/B testing
+
+Consultar [What is A/B testing?](https://docs.microsoft.com/en-us/learn/modules/implement-test-progressive-exposure-deployment/2-what-a-b-testing)
+
+Un `A/B testing` compara dos versiones de una página web o aplicación entre sí para determinar cual funciona mejor.
+
+## Despliegue en anillos
+
+Consultar: 
+- [Use deployment rings with extension releases](https://docs.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings?view=azure-devops)
+- [Deploying new releases: Feature flags or rings?](https://opensource.com/article/18/2/feature-flags-ring-deployment-model)
+
+En un despliegue en anillos, se hace un despliegue gradual validando los cambios de tu extensión en producción imentras se limita el número de usuarios afectados.
+
+![Ring based deployment](./images/Ring-based-deployment.png)
+
+# Módulo Artifacts
+
+## ¿Qué es Azure Artifacts?
+
+Es el gestor de paquetes de AZ Devops.
+
+Con `AZ Artifacts` se puede crear y compartir, a partir de orígenes públicos y privados, fuentes de paquetes de:
+
+- `Maven` SPM (Software Project Management) y CT (Comprehension Tool) para `Java`. Basado en el concepto de `POM` (Project Object Model).
+- `NPM` gestor de paquetes por defecto para `Node.js` (JavaScript).
+- `NuGet` gestor de paquetes para `.NET`
+- `Python`
+- `Universal Packages`
+
+## Artifacts Feed. Crear feed
+
+Los `Artifacts Feeds` son constructos organizativos que permiten almacenar, gestionar y agrupar tus paquetes y controlar con quien los compartes.
+
+Hay dos tipos de feed:
+
+- `Project-scoped feed` De ámbito el proyecto
+- `Organization-scoped feed` De ámbito la organización
+
+En el pasado, todos los feeds formaban parte del ámbito de la organización. Se accedía a ellos desde cualquier proyecto interno de la organización. Los `Project-scoped feed` surgen para que exista un tipo de feed que se pueda hacer público (compartir paquetes en internet).
+
+El feed de nuestra orgqanización viene creado por defecto.
+
+Desde la pestaña `Artifacts`, podemos crear un feed de poryecto con la opción `Create Feed`. En nuestr casi, creamos el feed `Prueba`. Una vez creado, podemos configurarlo utilizando el icono de settings, como se muestra en la Figura ['Artifact Feed setttings'](fig).
+
+![Artifact Feed setttings](/images/Artifacts-Feed-settings.png)
+
+En la Figura ['Artifact Feed setttings. Upstream sources'](fig), se observan las distintas pestañas con opciones de configuración,con más detalle, la pestaña de las fuentes trackeadas (Upstream sources).
+
+![Artifact Feed setttings. Upstream sources](/images/Artifacts-Feed-settings-Upstream-sources.png)
+
+## Conectar feed
+
+En la pestaña `Artifacts`, nos situamos en el feed deseado y hacemos un `Connect feed`. En la Figura ['Artifacts. Connect to feed'](fig) se muestran las opciones  de conexión que se pueden utilizar.
+
+![Artifacts. Connect to feed](./images/Artifacts-Connect-to-feed.png)
+
+En el curso se muestra un ejemplo de conexión con `Visual Studio`
+
+## Lab: crear librería que se sube versionada a Artifacts y se consume en otro proyecto
+
+[PENDIENTE](todo)
+
+
+
+
 
 
 
