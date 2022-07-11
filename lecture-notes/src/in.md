@@ -1,11 +1,3 @@
-# Diccionario de términos
-
-| término         | equivalentes | traducciones | 
-| --------------- | ------------ | ------------ | 
-| tab             |              | pestaña      |                                    
-| Azure Repos Git | AZ Repo      |              | 
-|                 |              |              |                                    
-                                 
 # Introducción
 
 ## Definiciones y algunas instalaciones
@@ -1469,11 +1461,11 @@ El feed de nuestra orgqanización viene creado por defecto.
 
 Desde la pestaña `Artifacts`, podemos crear un feed de poryecto con la opción `Create Feed`. En nuestr casi, creamos el feed `Prueba`. Una vez creado, podemos configurarlo utilizando el icono de settings, como se muestra en la Figura ['Artifact Feed setttings'](fig).
 
-![Artifact Feed setttings](/images/Artifacts-Feed-settings.png)
+![Artifact Feed setttings](./images/Artifacts-Feed-settings.png)
 
 En la Figura ['Artifact Feed setttings. Upstream sources'](fig), se observan las distintas pestañas con opciones de configuración,con más detalle, la pestaña de las fuentes trackeadas (Upstream sources).
 
-![Artifact Feed setttings. Upstream sources](/images/Artifacts-Feed-settings-Upstream-sources.png)
+![Artifact Feed setttings. Upstream sources](./images/Artifacts-Feed-settings-Upstream-sources.png)
 
 ## Conectar feed
 
