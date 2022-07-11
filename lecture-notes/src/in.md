@@ -1430,8 +1430,6 @@ Consultar:
 
 En un despliegue en anillos, se hace un despliegue gradual validando los cambios de tu extensión en producción imentras se limita el número de usuarios afectados.
 
-![Ring based deployment](./images/Ring-based-deployment.png)
-
 # Módulo Artifacts
 
 ## ¿Qué es Azure Artifacts?
